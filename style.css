@@ -1,0 +1,242 @@
+/* ============================================
+   FreeAssetsHub — Main Stylesheet
+   ============================================ */
+
+/* Google Font imports handled in HTML */
+
+:root {
+  --brand-500: #8b5cf6;
+  --brand-600: #7c3aed;
+  --accent-500: #3b82f6;
+  --radius: 16px;
+}
+
+/* ---- Reset & Base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Syne', sans-serif; }
+
+/* ---- Scrollbar Hide ---- */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ---- Glassmorphism Card ---- */
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius);
+}
+
+/* ---- Asset Card ---- */
+.asset-card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  group: true;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #f9f9fb;
+}
+.dark .asset-card { background: #1f2937; }
+.asset-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
+
+.asset-card img {
+  width: 100%;
+  display: block;
+  border-radius: 12px 12px 0 0;
+  object-fit: cover;
+  loading: lazy;
+}
+
+.asset-card .card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+}
+.asset-card:hover .card-overlay { opacity: 1; }
+
+.asset-card .card-info {
+  padding: 10px 12px;
+  border-radius: 0 0 12px 12px;
+}
+
+/* ---- Filter Button Active ---- */
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--brand-600), var(--accent-500)) !important;
+  color: white !important;
+}
+
+/* ---- Music Player Card ---- */
+.music-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: background 0.2s;
+}
+.music-card:hover { background: rgba(255,255,255,0.15); }
+.music-thumb {
+  width: 52px; height: 52px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--brand-500), var(--accent-500));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ---- Category Card ---- */
+.cat-card {
+  position: relative; overflow: hidden; border-radius: 14px;
+  aspect-ratio: 1; cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.cat-card:hover { transform: scale(1.03); }
+.cat-card .cat-bg {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem;
+}
+.cat-card .cat-name {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 8px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: white; font-size: 0.75rem; font-weight: 600;
+  text-align: center; font-family: 'Syne', sans-serif;
+}
+
+/* ---- Invitation Card ---- */
+.invite-card {
+  border-radius: 14px; overflow: hidden; cursor: pointer;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.invite-card:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+
+/* ---- Wallpaper Card ---- */
+.wallpaper-card {
+  border-radius: 10px; overflow: hidden; cursor: pointer;
+  aspect-ratio: 9/16; position: relative;
+  transition: transform 0.2s;
+}
+.wallpaper-card:hover { transform: scale(1.04); }
+.wallpaper-card img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---- GIF Card ---- */
+.gif-card {
+  border-radius: 12px; overflow: hidden; cursor: pointer;
+  position: relative; aspect-ratio: 1;
+  transition: transform 0.2s;
+}
+.gif-card:hover { transform: scale(1.03); }
+.gif-badge {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(0,0,0,0.6); color: white;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+}
+
+/* ---- Download Modal Animation ---- */
+#downloadModal > div:last-child,
+#previewModal > div:last-child {
+  animation: modalSlideUp 0.3s ease;
+}
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---- Floating Download Btn ---- */
+#floatingDownloadBtn {
+  position: fixed; right: 20px; bottom: 80px; z-index: 40;
+  animation: floatBounce 2s ease-in-out infinite;
+}
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ---- Lazy Load Fade In ---- */
+.lazy-img { opacity: 0; transition: opacity 0.4s ease; }
+.lazy-img.loaded { opacity: 1; }
+
+/* ---- Admin Layout ---- */
+.admin-sidebar {
+  width: 250px; flex-shrink: 0;
+  background: #1e1b4b;
+  min-height: 100vh;
+  position: fixed; top: 0; left: 0;
+  overflow-y: auto; z-index: 30;
+}
+.admin-main { margin-left: 250px; min-height: 100vh; }
+@media (max-width: 768px) {
+  .admin-sidebar { width: 0; overflow: hidden; }
+  .admin-main { margin-left: 0; }
+  .admin-sidebar.open { width: 250px; }
+}
+
+/* ---- Stat Card ---- */
+.stat-card {
+  background: white; border-radius: 14px;
+  padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+}
+.dark .stat-card { background: #1f2937; border-color: #374151; }
+
+/* ---- Page Sections ---- */
+.page-hero {
+  background: linear-gradient(135deg, #2e1065 0%, #1d4ed8 100%);
+  padding: 60px 20px 40px;
+  text-align: center; color: white;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .hero-stats { flex-direction: column; gap: 12px; }
+  .admin-main { margin-left: 0; }
+}
+
+/* ---- Animations ---- */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+.dark .skeleton {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+}
+
+/* ---- Notification Toast ---- */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: #1f2937; color: white;
+  padding: 10px 20px; border-radius: 50px;
+  font-size: 0.875rem; z-index: 100;
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.5s forwards;
+}
+@keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+@keyframes toastOut { from { opacity:1; } to { opacity:0; } }
+
+/* ---- Privacy / Terms Pages ---- */
+.legal-content h2 { font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.5rem; color: #7c3aed; }
+.legal-content p { margin-bottom: 1rem; line-height: 1.75; }
+.legal-content ul { margin-bottom: 1rem; padding-left: 1.5rem; list-style: disc; }
+.legal-content ul li { margin-bottom: 0.4rem; line-height: 1.6; }

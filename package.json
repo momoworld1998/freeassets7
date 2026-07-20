@@ -1,0 +1,13 @@
+{
+  "name": "freeassetshub-server",
+  "version": "1.0.0",
+  "description": "Public file server for FreeAssetsHub — saves admin-uploaded assets to a real /uploads folder so anyone can download them from the website.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}
