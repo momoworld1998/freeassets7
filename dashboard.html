@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Dashboard – FreeAssetsHub</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{display:['Syne','sans-serif'],body:['DM Sans','sans-serif']},colors:{brand:{50:'#f5f3ff',100:'#ede9fe',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9',900:'#2e1065'},accent:{400:'#60a5fa',500:'#3b82f6',600:'#2563eb'}}}}}</script>
+<style>
+*{box-sizing:border-box;}body{font-family:'DM Sans',sans-serif;background:#0a0a0f;color:#f1f5f9;}h1,h2,h3,h4,h5{font-family:'Syne',sans-serif;}
+#sidebar{width:260px;flex-shrink:0;background:#111827;border-right:1px solid #1f2937;height:100vh;position:sticky;top:0;overflow-y:auto;transition:width .25s;}
+#sidebar.collapsed{width:70px;}
+#sidebar.collapsed .nav-label,.sidebar.collapsed .sidebar-logo-text,.sidebar.collapsed .nav-badge,.sidebar.collapsed .section-label{display:none;}
+#sidebar.collapsed .nav-item{justify-content:center;padding:12px 8px;}
+@media(max-width:768px){#sidebar{position:fixed;top:0;left:0;height:100%;z-index:60;transform:translateX(-100%);width:260px!important;}#sidebar.open{transform:translateX(0);}#main{margin-left:0!important;}}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;cursor:pointer;color:#9ca3af;font-size:.875rem;font-weight:500;text-decoration:none;transition:all .15s;white-space:nowrap;}
+.nav-item:hover{background:rgba(124,58,237,.15);color:#c4b5fd;}
+.nav-item.active{background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(59,130,246,.2));color:#a78bfa;font-weight:600;}
+.nav-item svg{flex-shrink:0;width:18px;height:18px;}
+.section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#4b5563;padding:14px 14px 4px;display:block;}
+.panel{display:none;}.panel.active{display:block;}
+.card{background:#1f2937;border:1px solid #374151;border-radius:16px;}
+.stat-card{background:#1f2937;border:1px solid #374151;border-radius:16px;padding:20px;}
+.form-label{display:block;font-size:.8125rem;font-weight:600;color:#9ca3af;margin-bottom:5px;}
+.form-input{width:100%;background:#111827;border:1px solid #374151;border-radius:10px;padding:10px 14px;font-size:.875rem;color:#f9fafb;outline:none;transition:border-color .15s;font-family:'DM Sans',sans-serif;}
+.form-input:focus{border-color:#7c3aed;}
+.form-select{width:100%;background:#111827;border:1px solid #374151;border-radius:10px;padding:10px 14px;font-size:.875rem;color:#f9fafb;outline:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.form-select:focus{border-color:#7c3aed;}
+.form-textarea{width:100%;background:#111827;border:1px solid #374151;border-radius:10px;padding:10px 14px;font-size:.875rem;color:#f9fafb;outline:none;resize:vertical;font-family:'DM Sans',sans-serif;}
+.form-textarea:focus{border-color:#7c3aed;}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;border-radius:10px;padding:9px 18px;font-size:.875rem;transition:opacity .15s;}
+.btn-primary{background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff;}.btn-primary:hover{opacity:.88;}
+.btn-secondary{background:#374151;color:#d1d5db;}.btn-secondary:hover{background:#4b5563;}
+.btn-success{background:#059669;color:#fff;padding:6px 14px;border-radius:8px;font-size:.8125rem;}.btn-success:hover{background:#047857;}
+.btn-danger{background:#dc2626;color:#fff;padding:6px 14px;border-radius:8px;font-size:.8125rem;}.btn-danger:hover{background:#b91c1c;}
+.btn-warn{background:#d97706;color:#fff;padding:6px 14px;border-radius:8px;font-size:.8125rem;}
+.btn-sm{padding:5px 12px;font-size:.75rem;border-radius:7px;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700;}
+.badge-green{background:#064e3b;color:#34d399;}.badge-blue{background:#1e3a5f;color:#60a5fa;}.badge-red{background:#450a0a;color:#f87171;}.badge-yellow{background:#451a03;color:#fbbf24;}.badge-purple{background:#2e1065;color:#a78bfa;}.badge-gray{background:#1f2937;color:#9ca3af;}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{padding:12px 16px;text-align:left;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;border-bottom:1px solid #374151;}
+.data-table td{padding:11px 16px;font-size:.875rem;color:#d1d5db;border-bottom:1px solid #1f2937;vertical-align:middle;}
+.data-table tr:hover td{background:rgba(55,65,81,.5);}
+.data-table tr:last-child td{border-bottom:none;}
+.toggle{position:relative;width:42px;height:22px;}.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#374151;border-radius:22px;transition:.3s;cursor:pointer;}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+input:checked+.toggle-slider{background:#7c3aed;}input:checked+.toggle-slider::before{transform:translateX(20px);}
+.upload-zone{border:2px dashed #374151;border-radius:14px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;}
+.upload-zone:hover,.upload-zone.drag{border-color:#7c3aed;background:rgba(124,58,237,.05);}
+.progress-bar{height:6px;background:#374151;border-radius:6px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#3b82f6);border-radius:6px;transition:width .4s ease;}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;}
+.modal-box{background:#1f2937;border:1px solid #374151;border-radius:20px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;animation:mIn .25s ease;}
+@keyframes mIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.toast-wrap{position:fixed;top:18px;right:18px;z-index:300;display:flex;flex-direction:column;gap:8px;}
+.toast-item{background:#1f2937;border:1px solid #374151;color:#fff;padding:12px 16px;border-radius:12px;font-size:.875rem;display:flex;align-items:center;gap:10px;min-width:240px;animation:tIn .3s ease;}
+@keyframes tIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.toast-item.ok{border-color:#059669;}.toast-item.err{border-color:#dc2626;}.toast-item.warn{border-color:#d97706;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#111827;}::-webkit-scrollbar-thumb{background:#374151;border-radius:3px;}
+.img-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;background:#374151;}
+.table-wrap{overflow-x:auto;}
+/* live preview badge */
+.live-badge{display:inline-flex;align-items:center;gap:5px;background:#064e3b;color:#34d399;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;}
+.live-dot{width:6px;height:6px;background:#34d399;border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+<div class="toast-wrap" id="toastWrap"></div>
+<div id="overlay" class="hidden fixed inset-0 bg-black/50 z-50 md:hidden" onclick="closeMobileSidebar()"></div>
+
+<div class="flex" style="min-height:100vh;">
+<!-- ========== SIDEBAR ========== -->
+<aside id="sidebar">
+  <div class="flex items-center gap-3 px-4 py-5 border-b border-gray-800">
+    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0">
+      <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+    </div>
+    <div class="sidebar-logo-text">
+      <p class="font-display font-bold text-white text-sm leading-tight">FreeAssetsHub</p>
+      <div class="live-badge mt-0.5"><span class="live-dot"></span>Admin Live</div>
+    </div>
+  </div>
+  <nav class="px-3 py-4 space-y-0.5">
+    <span class="section-label nav-label">Overview</span>
+    <a class="nav-item active" onclick="go('dashboard')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-label">Dashboard</span></a>
+    <span class="section-label nav-label">Assets</span>
+    <a class="nav-item" onclick="go('upload')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg><span class="nav-label">Upload Asset</span></a>
+    <a class="nav-item" onclick="go('assets')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="nav-label">Manage Assets</span><span class="nav-badge ml-auto text-xs" id="sidebarAssetCount"></span></a>
+    <a class="nav-item" onclick="go('categories')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg><span class="nav-label">Categories</span></a>
+    <a class="nav-item" onclick="go('music')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/></svg><span class="nav-label">Music Files</span></a>
+    <span class="section-label nav-label">Pages</span>
+    <a class="nav-item" onclick="go('homepage')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span class="nav-label">Homepage (index.html)</span></a>
+    <a class="nav-item" onclick="go('trending-page')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg><span class="nav-label">Trending Page</span></a>
+    <a class="nav-item" onclick="go('categories-page')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg><span class="nav-label">Categories Page</span></a>
+    <span class="section-label nav-label">Monetization</span>
+    <a class="nav-item" onclick="go('ads')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg><span class="nav-label">Manage Ads</span></a>
+    <span class="section-label nav-label">Reports</span>
+    <a class="nav-item" onclick="go('analytics')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg><span class="nav-label">Analytics</span></a>
+    <a class="nav-item" onclick="go('vault')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg><span class="nav-label">Asset Vault 🔒</span><span class="nav-badge ml-auto text-xs bg-green-900 text-green-400 px-1.5 py-0.5 rounded-full" id="vaultBadge">0</span></a>
+    <span class="section-label nav-label">Config</span>
+    <a class="nav-item" onclick="go('settings')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg><span class="nav-label">Settings</span></a>
+  </nav>
+  <div class="px-3 py-4 border-t border-gray-800 space-y-0.5">
+    <a href="../index.html" target="_blank" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg><span class="nav-label">View Website</span></a>
+    <a onclick="adminLogout()" class="nav-item" style="color:#f87171;"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg><span class="nav-label">Logout</span></a>
+  </div>
+</aside>
+
+<!-- ========== MAIN ========== -->
+<div id="main" class="flex-1 flex flex-col min-w-0">
+  <!-- TOP BAR -->
+  <header class="bg-gray-900 border-b border-gray-800 px-4 sm:px-6 py-3 flex items-center justify-between gap-3 sticky top-0 z-30">
+    <div class="flex items-center gap-3">
+      <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl bg-gray-800 hover:bg-gray-700 flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div>
+        <p class="font-display font-semibold text-white text-sm" id="pageTitle">Dashboard</p>
+        <p class="text-gray-500 text-xs" id="pageSubtitle">Overview & statistics</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="hidden sm:flex items-center gap-1.5 bg-green-900/30 text-green-400 text-xs font-semibold px-3 py-1.5 rounded-full border border-green-800/50">
+        <span style="width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite;"></span>
+        Changes sync live
+      </span>
+      <div class="flex items-center gap-2 bg-gray-800 rounded-xl px-3 py-1.5 cursor-pointer">
+        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-xs font-bold">A</div>
+        <span class="text-sm font-medium text-gray-300 hidden sm:block">Admin</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 p-4 sm:p-6 overflow-auto">
+
+  <!-- ======== DASHBOARD ======== -->
+  <div id="panel-dashboard" class="panel active">
+    <div class="bg-gradient-to-r from-purple-900/60 to-blue-900/40 border border-purple-800/40 rounded-2xl p-5 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <h2 class="font-display font-bold text-xl text-white mb-1">Welcome back, Admin 👋</h2>
+        <p class="text-gray-400 text-sm" id="clockEl"></p>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        <button onclick="go('upload')" class="btn btn-primary text-sm">+ Upload Asset</button>
+        <a href="../index.html" target="_blank" class="btn btn-secondary text-sm">View Live Site ↗</a>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+      <div class="stat-card"><div class="flex justify-between items-start mb-2"><div class="w-9 h-9 rounded-xl bg-purple-900/50 flex items-center justify-center text-purple-400">📦</div><span class="badge badge-green">Live</span></div><p class="text-2xl font-display font-bold text-white" id="ds-total">0</p><p class="text-gray-400 text-xs mt-0.5">Total Assets</p></div>
+      <div class="stat-card"><div class="flex justify-between items-start mb-2"><div class="w-9 h-9 rounded-xl bg-green-900/30 flex items-center justify-center text-green-400">⬇️</div><span class="badge badge-blue">+28%</span></div><p class="text-2xl font-display font-bold text-white" id="ds-downloads">0</p><p class="text-gray-400 text-xs mt-0.5">Total Downloads</p></div>
+      <div class="stat-card"><div class="flex justify-between items-start mb-2"><div class="w-9 h-9 rounded-xl bg-blue-900/30 flex items-center justify-center text-blue-400">📂</div><span class="badge badge-purple">20</span></div><p class="text-2xl font-display font-bold text-white" id="ds-cats">0</p><p class="text-gray-400 text-xs mt-0.5">Categories</p></div>
+      <div class="stat-card"><div class="flex justify-between items-start mb-2"><div class="w-9 h-9 rounded-xl bg-yellow-900/30 flex items-center justify-center text-yellow-400">🔥</div><span class="badge badge-yellow">Hot</span></div><p class="text-2xl font-display font-bold text-white" id="ds-trending">0</p><p class="text-gray-400 text-xs mt-0.5">Trending Assets</p></div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div class="card lg:col-span-2">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800"><h3 class="font-display font-semibold text-white">Recent Assets</h3><button onclick="go('assets')" class="text-purple-400 text-xs hover:underline">View all →</button></div>
+        <div class="table-wrap"><table class="data-table" id="recentTbl"></table></div>
+      </div>
+      <div class="card">
+        <div class="px-5 py-4 border-b border-gray-800"><h3 class="font-display font-semibold text-white">Quick Actions</h3></div>
+        <div class="p-4 space-y-2" id="quickActions">
+          <button onclick="go('upload')" class="w-full text-left flex items-center gap-3 p-3 rounded-xl bg-purple-900/20 hover:bg-purple-900/40 transition-colors"><span class="text-2xl">📤</span><div><p class="text-sm font-semibold text-white">Upload New Asset</p><p class="text-xs text-gray-400">Add images, videos, music</p></div></button>
+          <button onclick="go('homepage')" class="w-full text-left flex items-center gap-3 p-3 rounded-xl bg-blue-900/20 hover:bg-blue-900/40 transition-colors"><span class="text-2xl">🏠</span><div><p class="text-sm font-semibold text-white">Edit Homepage</p><p class="text-xs text-gray-400">Hero, sections, banners</p></div></button>
+          <button onclick="go('trending-page')" class="w-full text-left flex items-center gap-3 p-3 rounded-xl bg-orange-900/20 hover:bg-orange-900/40 transition-colors"><span class="text-2xl">🔥</span><div><p class="text-sm font-semibold text-white">Trending Page</p><p class="text-xs text-gray-400">Hero text, filters, sections</p></div></button>
+          <button onclick="go('categories-page')" class="w-full text-left flex items-center gap-3 p-3 rounded-xl bg-green-900/20 hover:bg-green-900/40 transition-colors"><span class="text-2xl">📋</span><div><p class="text-sm font-semibold text-white">Categories Page</p><p class="text-xs text-gray-400">Spotlight tabs, layout</p></div></button>
+          <button onclick="go('ads')" class="w-full text-left flex items-center gap-3 p-3 rounded-xl bg-yellow-900/20 hover:bg-yellow-900/40 transition-colors"><span class="text-2xl">💰</span><div><p class="text-sm font-semibold text-white">AdSense Settings</p><p class="text-xs text-gray-400">Publisher ID, slots</p></div></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== UPLOAD ======== -->
+  <div id="panel-upload" class="panel">
+    <div class="mb-5"><h2 class="font-display font-bold text-xl text-white">Upload New Asset</h2><p class="text-gray-400 text-sm mt-1">Files are stored in your browser and served directly — no URL needed.</p></div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div class="lg:col-span-2 space-y-4">
+        <div class="card p-5 space-y-4">
+          <h3 class="font-display font-semibold text-white text-base">Asset Details</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div><label class="form-label">Title *</label><input type="text" id="uTitle" class="form-input" placeholder="e.g. Sunset 4K Wallpaper" oninput="livePreviewUpdate()"/></div>
+            <div><label class="form-label">Category *</label><select id="uCat" class="form-select"></select></div>
+            <div><label class="form-label">File Format</label><select id="uFmt" class="form-select"><option>PNG</option><option>JPG</option><option>GIF</option><option>MP4</option><option>MP3</option><option>PSD</option><option>ZIP</option></select></div>
+            <div><label class="form-label">Tags</label><input type="text" id="uTags" class="form-input" placeholder="trending, new, hd, animated"/></div>
+          </div>
+          <div class="flex flex-wrap gap-5 pt-1">
+            <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="uFeatured"/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Featured</span></label>
+            <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="uPublished" checked/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Publish Immediately</span></label>
+            <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="uTrending"/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Mark Trending 🔥</span></label>
+          </div>
+        </div>
+
+        <!-- FILE UPLOAD (no URL needed) -->
+        <div class="card p-5 space-y-4">
+          <h3 class="font-display font-semibold text-white text-base flex items-center gap-2">📁 Upload File Directly <span class="badge badge-green">No URL needed</span></h3>
+          <p class="text-gray-400 text-xs">Select the asset file — it's stored in your browser and users download it directly from there.</p>
+          <!-- Main file -->
+          <div>
+            <label class="form-label">Asset File (image / video / audio / zip) *</label>
+            <div class="upload-zone" id="mainDropZone" ondragover="dz(event,'mainDropZone')" ondragleave="dl(event,'mainDropZone')" ondrop="dropMain(event)" onclick="document.getElementById('mainFileInput').click()">
+              <div class="text-4xl mb-2" id="mainDropIcon">📤</div>
+              <p class="text-white font-semibold text-sm mb-1" id="mainDropLabel">Click or drag & drop asset file</p>
+              <p class="text-gray-500 text-xs">PNG, JPG, GIF, MP4, MP3, PSD, ZIP — any size</p>
+              <input type="file" id="mainFileInput" class="hidden" accept="image/*,video/*,audio/*,.psd,.zip,.gif" onchange="handleMainFile(this)"/>
+            </div>
+            <div id="mainFileInfo" class="hidden mt-2 flex items-center gap-3 p-3 bg-gray-800 rounded-xl">
+              <span class="text-2xl" id="mainFileIcon">📄</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-white truncate" id="mainFileName"></p>
+                <p class="text-xs text-gray-400" id="mainFileSize"></p>
+              </div>
+              <button onclick="clearMainFile()" class="text-red-400 hover:text-red-300 text-xs">✕ Remove</button>
+            </div>
+          </div>
+          <!-- Thumbnail -->
+          <div>
+            <label class="form-label">Thumbnail / Preview Image *</label>
+            <div class="upload-zone" id="thumbDropZone" ondragover="dz(event,'thumbDropZone')" ondragleave="dl(event,'thumbDropZone')" ondrop="dropThumb(event)" onclick="document.getElementById('thumbFileInput').click()">
+              <div class="text-3xl mb-2" id="thumbDropIcon">🖼</div>
+              <p class="text-white font-semibold text-sm mb-1" id="thumbDropLabel">Click or drag thumbnail image</p>
+              <p class="text-gray-500 text-xs">JPG, PNG, WebP — used as preview card</p>
+              <input type="file" id="thumbFileInput" class="hidden" accept="image/*" onchange="handleThumbFile(this)"/>
+            </div>
+            <p class="text-gray-500 text-xs mt-1">Or paste a URL instead:</p>
+            <input type="text" id="uThumbUrl" class="form-input mt-1" placeholder="https://example.com/thumb.jpg" oninput="livePreviewUpdate()"/>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button onclick="saveAsset()" class="btn btn-primary flex-1 justify-center">✅ Save & Publish Asset</button>
+          <button onclick="resetUpload()" class="btn btn-secondary">Reset</button>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="space-y-4">
+        <div class="card p-4">
+          <h3 class="font-display font-semibold text-white text-sm mb-3">Live Preview</h3>
+          <div class="bg-gray-800 rounded-xl overflow-hidden mb-3" style="aspect-ratio:3/4;">
+            <img id="livePreviewImg" src="" alt="" class="w-full h-full object-cover hidden"/>
+            <div id="livePreviewPlaceholder" class="w-full h-full flex items-center justify-center text-5xl text-gray-600">🖼</div>
+          </div>
+          <p id="livePreviewTitle" class="text-sm font-semibold text-gray-300 text-center truncate">Title will appear here</p>
+          <div class="flex items-center justify-center gap-2 mt-1">
+            <span id="livePreviewCat" class="badge badge-purple text-xs hidden"></span>
+            <span id="livePreviewFmt" class="badge badge-blue text-xs"></span>
+          </div>
+        </div>
+        <div class="card p-4">
+          <h3 class="font-display font-semibold text-white text-sm mb-2">Bulk Upload CSV</h3>
+          <p class="text-gray-400 text-xs mb-3">Import many assets at once via CSV with thumbnail URLs.</p>
+          <input type="file" id="csvInput" class="hidden" accept=".csv" onchange="importCSV(this)"/>
+          <button onclick="document.getElementById('csvInput').click()" class="btn btn-secondary w-full text-sm justify-center mb-2">📋 Import CSV</button>
+          <button onclick="downloadCSVTemplate()" class="text-purple-400 text-xs hover:underline w-full text-center block">Download CSV Template</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== MANAGE ASSETS ======== -->
+  <div id="panel-assets" class="panel">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+      <div><h2 class="font-display font-bold text-xl text-white">Manage Assets</h2><p class="text-gray-400 text-sm">Edit, delete, feature or hide any asset</p></div>
+      <div class="flex gap-2"><button onclick="go('upload')" class="btn btn-primary text-sm">+ Upload</button><button onclick="exportCSV()" class="btn btn-secondary text-sm">⬇ Export CSV</button></div>
+    </div>
+    <div class="card p-4 mb-4">
+      <div class="flex flex-wrap gap-3">
+        <input type="text" id="assetSearch" placeholder="🔍 Search title…" oninput="filterAssets()" class="form-input flex-1 min-w-40" style="max-width:260px;"/>
+        <select id="assetCatF" onchange="filterAssets()" class="form-select" style="width:auto;"><option value="">All Categories</option></select>
+        <select id="assetFmtF" onchange="filterAssets()" class="form-select" style="width:auto;"><option value="">All Formats</option><option>PNG</option><option>JPG</option><option>GIF</option><option>MP4</option><option>MP3</option><option>PSD</option><option>ZIP</option></select>
+        <button id="bulkDelBtn" onclick="bulkDelete()" class="btn btn-danger hidden text-sm">🗑 Delete Selected</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th><input type="checkbox" onchange="selAll(this)"/></th><th>Asset</th><th>Category</th><th>Format</th><th>Downloads</th><th>Status</th><th>Trending</th><th>Featured</th><th>Actions</th></tr></thead>
+          <tbody id="assetsTbody"></tbody>
+        </table>
+      </div>
+      <div class="px-5 py-3 border-t border-gray-800 flex items-center justify-between text-xs text-gray-500">
+        <span id="assetsCount">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== CATEGORIES ======== -->
+  <div id="panel-categories" class="panel">
+    <div class="flex items-center justify-between mb-5">
+      <div><h2 class="font-display font-bold text-xl text-white">Categories</h2><p class="text-gray-400 text-sm">Add, edit, remove categories</p></div>
+      <button onclick="openCatModal()" class="btn btn-primary text-sm">+ Add Category</button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="catsGrid"></div>
+  </div>
+
+  <!-- ======== MUSIC ======== -->
+  <div id="panel-music" class="panel">
+    <div class="flex items-center justify-between mb-5">
+      <div><h2 class="font-display font-bold text-xl text-white">Music Files</h2><p class="text-gray-400 text-sm">Upload & manage copyright-free tracks</p></div>
+      <button onclick="openMusicModal()" class="btn btn-primary text-sm">+ Add Track</button>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Track</th><th>Genre</th><th>Duration</th><th>BPM</th><th>Downloads</th><th>File</th><th>Actions</th></tr></thead>
+          <tbody id="musicTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== HOMEPAGE ======== -->
+  <div id="panel-homepage" class="panel">
+    <div class="mb-5 flex items-center gap-3">
+      <div><h2 class="font-display font-bold text-xl text-white">Homepage (index.html)</h2><p class="text-gray-400 text-sm">Edit hero, sections, announcement bar, trending keywords</p></div>
+      <a href="../index.html" target="_blank" class="btn btn-secondary text-sm ml-auto">Preview ↗</a>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">🦸 Hero Section</h3>
+        <div><label class="form-label">Hero Title Line 1</label><input id="hHero1" class="form-input" value="Download Free"/></div>
+        <div><label class="form-label">Hero Title Line 2 (gradient)</label><input id="hHero2" class="form-input" value="Digital Assets"/></div>
+        <div><label class="form-label">Hero Subtitle</label><textarea id="hHeroSub" class="form-textarea" rows="2">Templates, wallpapers, music, GIFs, invitation cards & more. 100% copyright-free.</textarea></div>
+        <div><label class="form-label">Search Placeholder</label><input id="hSearchPH" class="form-input" value="Search wallpapers, templates, music..."/></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="form-label">Stat 1 Number</label><input id="hStat1n" class="form-input" value="10K+"/></div>
+          <div><label class="form-label">Stat 1 Label</label><input id="hStat1l" class="form-input" value="Free Assets"/></div>
+          <div><label class="form-label">Stat 2 Number</label><input id="hStat2n" class="form-input" value="500K+"/></div>
+          <div><label class="form-label">Stat 2 Label</label><input id="hStat2l" class="form-input" value="Downloads"/></div>
+        </div>
+        <button onclick="saveHomepageHero()" class="btn btn-primary w-full justify-center">💾 Save Hero</button>
+      </div>
+      <div class="space-y-4">
+        <div class="card p-5 space-y-3">
+          <h3 class="font-display font-semibold text-white">📋 Section Visibility</h3>
+          <p class="text-gray-400 text-xs">Toggle which sections appear on the homepage</p>
+          <div id="sectionToggles" class="space-y-2"></div>
+        </div>
+        <div class="card p-5 space-y-3">
+          <h3 class="font-display font-semibold text-white">📣 Announcement Bar</h3>
+          <div><label class="form-label">Message</label><input id="annText" class="form-input" placeholder="🎉 New Festival templates added!"/></div>
+          <div class="flex items-center justify-between">
+            <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="annEnabled"/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Show Announcement</span></label>
+            <select id="annColor" class="form-select" style="width:auto;font-size:.8rem;"><option value="brand">Purple</option><option value="green">Green</option><option value="red">Red</option><option value="blue">Blue</option></select>
+          </div>
+          <button onclick="saveAnnouncement()" class="btn btn-primary w-full justify-center">💾 Save</button>
+        </div>
+        <div class="card p-5 space-y-3">
+          <h3 class="font-display font-semibold text-white">🔥 Trending Keywords</h3>
+          <textarea id="trendKW" class="form-textarea" rows="3">Instagram Templates, Wedding Cards, 4K Wallpapers, YouTube Thumbnails, Free Music</textarea>
+          <button onclick="saveTrendingKW()" class="btn btn-primary w-full justify-center">💾 Save Keywords</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== TRENDING PAGE ======== -->
+  <div id="panel-trending-page" class="panel">
+    <div class="mb-5 flex items-center gap-3">
+      <div><h2 class="font-display font-bold text-xl text-white">Trending Page (trending.html)</h2><p class="text-gray-400 text-sm">Edit hero text, time periods, section labels and page meta</p></div>
+      <a href="../trending.html" target="_blank" class="btn btn-secondary text-sm ml-auto">Preview ↗</a>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">🔥 Hero Section</h3>
+        <div><label class="form-label">Page Title</label><input id="tpTitle" class="form-input" value="What's Trending Right Now"/></div>
+        <div><label class="form-label">Hero Subtitle</label><textarea id="tpSubtitle" class="form-textarea" rows="2">The most downloaded, most liked, and hottest new assets — handpicked from real download data.</textarea></div>
+        <div><label class="form-label">Badge Text (top pill)</label><input id="tpBadge" class="form-input" value="Updated Daily — Live Trending Data"/></div>
+        <div><label class="form-label">Default Time Period</label>
+          <select id="tpDefaultPeriod" class="form-select">
+            <option value="today">Today</option>
+            <option value="week" selected>This Week</option>
+            <option value="month">This Month</option>
+            <option value="alltime">All Time</option>
+          </select>
+        </div>
+        <h3 class="font-display font-semibold text-white pt-2">🏆 Top 3 Section</h3>
+        <div class="flex items-center justify-between"><span class="text-sm text-gray-300">Show Top 3 Spotlight</span><label class="toggle"><input type="checkbox" id="tpShowTop3" checked/><span class="toggle-slider"></span></label></div>
+        <div><label class="form-label">Top 3 Section Title</label><input id="tpTop3Title" class="form-input" value="🏆 Top 3 This Week"/></div>
+        <button onclick="saveTrendingPage()" class="btn btn-primary w-full justify-center">💾 Save Trending Page</button>
+      </div>
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">📊 Leaderboard & Stats</h3>
+        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><span class="text-sm text-gray-300">Show Download Leaderboard</span><label class="toggle"><input type="checkbox" id="tpLeaderboard" checked/><span class="toggle-slider"></span></label></div>
+        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><span class="text-sm text-gray-300">Show Stats Bar (counts)</span><label class="toggle"><input type="checkbox" id="tpStats" checked/><span class="toggle-slider"></span></label></div>
+        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><span class="text-sm text-gray-300">Show Trending Categories Strip</span><label class="toggle"><input type="checkbox" id="tpCatStrip" checked/><span class="toggle-slider"></span></label></div>
+        <h3 class="font-display font-semibold text-white pt-2">📝 SEO</h3>
+        <div><label class="form-label">Meta Title</label><input id="tpMetaTitle" class="form-input" value="Trending – FreeAssetsHub | Most Popular Free Digital Assets"/></div>
+        <div><label class="form-label">Meta Description</label><textarea id="tpMetaDesc" class="form-textarea" rows="2">Discover the hottest trending digital assets right now — top downloaded templates, wallpapers, music, GIFs and more.</textarea></div>
+        <button onclick="saveTrendingPage()" class="btn btn-primary w-full justify-center">💾 Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== CATEGORIES PAGE ======== -->
+  <div id="panel-categories-page" class="panel">
+    <div class="mb-5 flex items-center gap-3">
+      <div><h2 class="font-display font-bold text-xl text-white">Categories Page (categories.html)</h2><p class="text-gray-400 text-sm">Edit hero, spotlight tabs, search and layout settings</p></div>
+      <a href="../categories.html" target="_blank" class="btn btn-secondary text-sm ml-auto">Preview ↗</a>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">🦸 Hero Section</h3>
+        <div><label class="form-label">Page Title</label><input id="cpTitle" class="form-input" value="Browse All Categories"/></div>
+        <div><label class="form-label">Hero Subtitle</label><textarea id="cpSubtitle" class="form-textarea" rows="2">10,000+ copyright-free digital assets across 20 categories. Download free — no login required!</textarea></div>
+        <div><label class="form-label">Search Placeholder</label><input id="cpSearchPH" class="form-input" value="Search wallpapers, music, templates…"/></div>
+        <h3 class="font-display font-semibold text-white pt-2">✨ Category Spotlight</h3>
+        <div><label class="form-label">Default Spotlight Tab</label>
+          <select id="cpSpotlightDefault" class="form-select">
+            <option value="wallpapers">🖼 Wallpapers</option>
+            <option value="instagram">📸 Instagram</option>
+            <option value="wedding">💍 Wedding</option>
+            <option value="memes">😂 Memes</option>
+            <option value="music">🎵 Music</option>
+          </select>
+        </div>
+        <div><label class="form-label">Assets Per Page</label><input type="number" id="cpPerPage" class="form-input" value="20" min="4" max="100"/></div>
+        <button onclick="saveCatPage()" class="btn btn-primary w-full justify-center">💾 Save Categories Page</button>
+      </div>
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">📋 Section Visibility</h3>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><span class="text-sm text-gray-300">Show All Categories Hero Grid</span><label class="toggle"><input type="checkbox" id="cpShowCatGrid" checked/><span class="toggle-slider"></span></label></div>
+          <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><span class="text-sm text-gray-300">Show Asset Browser</span><label class="toggle"><input type="checkbox" id="cpShowBrowser" checked/><span class="toggle-slider"></span></label></div>
+          <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><span class="text-sm text-gray-300">Show Spotlight Section</span><label class="toggle"><input type="checkbox" id="cpShowSpotlight" checked/><span class="toggle-slider"></span></label></div>
+          <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><span class="text-sm text-gray-300">Show Trending Searches</span><label class="toggle"><input type="checkbox" id="cpShowTrendSearch" checked/><span class="toggle-slider"></span></label></div>
+          <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><span class="text-sm text-gray-300">Show Sidebar (desktop)</span><label class="toggle"><input type="checkbox" id="cpShowSidebar" checked/><span class="toggle-slider"></span></label></div>
+        </div>
+        <h3 class="font-display font-semibold text-white pt-2">📝 SEO</h3>
+        <div><label class="form-label">Meta Title</label><input id="cpMetaTitle" class="form-input" value="All Categories – FreeAssetsHub | Free Digital Assets"/></div>
+        <div><label class="form-label">Meta Description</label><textarea id="cpMetaDesc" class="form-textarea" rows="2">Browse all 20 categories of free digital assets — Instagram templates, wallpapers, music, GIFs, invitation cards, stickers, and more.</textarea></div>
+        <button onclick="saveCatPage()" class="btn btn-primary w-full justify-center">💾 Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== ADS ======== -->
+  <div id="panel-ads" class="panel">
+    <div class="mb-5"><h2 class="font-display font-bold text-xl text-white">AdSense Management</h2><p class="text-gray-400 text-sm">Configure Publisher ID and all ad slot IDs — changes apply live to all pages</p></div>
+    <div class="card p-5 mb-5 border-l-4 border-yellow-500">
+      <h3 class="font-display font-semibold text-white mb-4">Publisher Config</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div><label class="form-label">Publisher ID</label><input id="pubId" class="form-input font-mono" placeholder="ca-pub-XXXXXXXXXXXXXXXX"/><p class="text-gray-500 text-xs mt-1">Found in AdSense → Account info</p></div>
+        <div><label class="form-label">Download Countdown (seconds)</label><input type="number" id="dlCountdown" class="form-input" value="5" min="3" max="30"/></div>
+      </div>
+      <div class="flex flex-wrap gap-4 mb-4">
+        <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="adAutoAds" checked/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Auto Ads</span></label>
+        <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="adModal" checked/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Ad in Download Modal</span></label>
+        <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="adSticky" checked/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Sticky Mobile Banner</span></label>
+      </div>
+      <button onclick="saveAdConfig()" class="btn btn-primary">💾 Save Ad Config</button>
+    </div>
+    <h3 class="font-display font-semibold text-white mb-3">Ad Slot IDs</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="adSlotsGrid"></div>
+  </div>
+
+  <!-- ======== ANALYTICS ======== -->
+  <div id="panel-analytics" class="panel">
+    <div class="mb-5"><h2 class="font-display font-bold text-xl text-white">Analytics</h2><p class="text-gray-400 text-sm">Asset performance & download stats</p></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+      <div class="stat-card text-center"><p class="text-3xl font-display font-bold text-white" id="aSumDL">0</p><p class="text-gray-400 text-xs mt-1">Total Downloads</p></div>
+      <div class="stat-card text-center"><p class="text-3xl font-display font-bold text-green-400" id="aSumLikes">0</p><p class="text-gray-400 text-xs mt-1">Total Likes</p></div>
+      <div class="stat-card text-center"><p class="text-3xl font-display font-bold text-yellow-400" id="aSumTrending">0</p><p class="text-gray-400 text-xs mt-1">Trending Assets</p></div>
+      <div class="stat-card text-center"><p class="text-3xl font-display font-bold text-purple-400" id="aSumFeatured">0</p><p class="text-gray-400 text-xs mt-1">Featured Assets</p></div>
+    </div>
+    <div class="card p-5 mb-5">
+      <h3 class="font-display font-semibold text-white mb-4">Top Downloaded Assets</h3>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>#</th><th>Asset</th><th>Category</th><th>Downloads</th><th>Likes</th></tr></thead><tbody id="topDLBody"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- ======== SETTINGS ======== -->
+  <div id="panel-settings" class="panel">
+    <div class="mb-5"><h2 class="font-display font-bold text-xl text-white">Settings</h2><p class="text-gray-400 text-sm">SEO, contact info, password, appearance</p></div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">🔍 SEO Settings</h3>
+        <div><label class="form-label">Site Name</label><input id="seoName" class="form-input" value="FreeAssetsHub"/></div>
+        <div><label class="form-label">Homepage Meta Description</label><textarea id="seoDesc" class="form-textarea" rows="3">Download 10,000+ free copyright-free digital assets. No login required!</textarea></div>
+        <div><label class="form-label">Meta Keywords</label><input id="seoKW" class="form-input" value="free digital assets, instagram templates, wallpapers, free music"/></div>
+        <div><label class="form-label">Website URL</label><input id="seoUrl" class="form-input" value="https://freeassetshub.com"/></div>
+        <button onclick="saveSEO()" class="btn btn-primary w-full justify-center">💾 Save SEO</button>
+      </div>
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">📞 Contact Info</h3>
+        <div><label class="form-label">Phone</label><input id="ctPhone" class="form-input" value="+91 88176 44730"/></div>
+        <div><label class="form-label">Email</label><input id="ctEmail" class="form-input" value="croma.laxmielectronics@gmail.com"/></div>
+        <div><label class="form-label">WhatsApp Number (with country code)</label><input id="ctWA" class="form-input" value="918817644730"/></div>
+        <div><label class="form-label">Telegram Username</label><input id="ctTG" class="form-input" value="freeassetshub"/></div>
+        <button onclick="saveContact()" class="btn btn-primary w-full justify-center">💾 Save Contact</button>
+      </div>
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">🔑 Change Password</h3>
+        <div><label class="form-label">Current Password</label><input type="password" id="oldPwd" class="form-input" placeholder="Current password"/></div>
+        <div><label class="form-label">New Password</label><input type="password" id="newPwd" class="form-input" placeholder="Min 8 chars"/></div>
+        <div><label class="form-label">Confirm New Password</label><input type="password" id="cnfPwd" class="form-input" placeholder="Confirm new password"/></div>
+        <button onclick="changePwd()" class="btn btn-primary w-full justify-center">🔒 Change Password</button>
+      </div>
+      <div class="card p-5 space-y-4">
+        <h3 class="font-display font-semibold text-white">⚙️ System</h3>
+        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><div><p class="text-sm font-medium text-white">Watermark on Preview</p><p class="text-xs text-gray-400">Shows "FreeAssetsHub" on previews</p></div><label class="toggle"><input type="checkbox" id="sysWM" checked/><span class="toggle-slider"></span></label></div>
+        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl"><div><p class="text-sm font-medium text-white">Maintenance Mode</p><p class="text-xs text-gray-400">Shows maintenance page to visitors</p></div><label class="toggle"><input type="checkbox" id="sysMaint"/><span class="toggle-slider"></span></label></div>
+        <div class="flex flex-wrap gap-2 pt-1">
+          <button onclick="backupData()" class="btn btn-secondary text-sm">💾 Backup Data</button>
+          <button onclick="clearAllData()" class="btn btn-danger text-sm">⚠ Reset All Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== VAULT MANAGER PANEL ========== -->
+  <div id="panel-vault" class="panel">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h2 class="font-display font-bold text-xl text-white flex items-center gap-2">🔒 Asset Vault <span class="text-sm font-normal text-gray-400">(AES-256-GCM Encrypted)</span></h2>
+        <p class="text-gray-400 text-sm mt-1">Upload files directly — stored encrypted in your browser. No URL needed. Users download via the site automatically.</p>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        <button onclick="vaultExportBackup()" class="btn btn-secondary text-sm flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Export Backup</button>
+        <label class="btn btn-secondary text-sm flex items-center gap-2 cursor-pointer"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg> Import Backup<input type="file" id="vaultImportFile" accept=".json" class="hidden" onchange="vaultImportBackup(this)"/></label>
+      </div>
+    </div>
+
+    <!-- Vault Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="vaultStats">
+      <div class="stat-card text-center"><p class="text-2xl font-display font-bold text-white" id="vs-count">0</p><p class="text-gray-400 text-xs mt-1">🔒 Encrypted Files</p></div>
+      <div class="stat-card text-center"><p class="text-2xl font-display font-bold text-green-400" id="vs-size">0 KB</p><p class="text-gray-400 text-xs mt-1">💾 Total Size</p></div>
+      <div class="stat-card text-center"><p class="text-2xl font-display font-bold text-blue-400" id="vs-linked">0</p><p class="text-gray-400 text-xs mt-1">🔗 Linked to Assets</p></div>
+      <div class="stat-card text-center"><p class="text-2xl font-display font-bold text-yellow-400" id="vs-unlinked">0</p><p class="text-gray-400 text-xs mt-1">⚠ Unlinked Files</p></div>
+    </div>
+
+    <!-- Quick Upload a File to Vault -->
+    <div class="content-card p-5 mb-5">
+      <h3 class="font-display font-semibold text-white mb-3">⚡ Quick Upload to Vault</h3>
+      <p class="text-gray-400 text-sm mb-4">Choose an asset from your library, then drop the file. It will be encrypted and stored immediately — no URL needed.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label class="form-label">Link to Asset</label>
+          <select id="vaultAssetSelect" class="form-select"></select>
+        </div>
+        <div>
+          <label class="form-label">File</label>
+          <input type="file" id="vaultFileInput" class="form-input text-sm cursor-pointer" onchange="vaultFileChosen(this)" />
+        </div>
+        <div class="flex items-end">
+          <button onclick="vaultUploadFile()" class="btn btn-primary w-full flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Encrypt & Store
+          </button>
+        </div>
+      </div>
+      <!-- Drag & Drop Zone -->
+      <div id="vaultDropZone" class="upload-zone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="vaultDropFile(event)" onclick="document.getElementById('vaultFileInput').click()">
+        <div class="text-4xl mb-2">🔒</div>
+        <p class="text-white font-semibold mb-1">Drag & Drop any asset file here</p>
+        <p class="text-gray-400 text-sm">PNG, JPG, GIF, MP4, MP3, PSD, ZIP — up to 50 MB</p>
+        <p class="text-gray-500 text-xs mt-2">Files are AES-256-GCM encrypted before storage</p>
+      </div>
+      <div id="vaultUploadProgress" class="hidden mt-3">
+        <div class="flex justify-between text-xs text-gray-400 mb-1"><span id="vaultProgressName">Encrypting…</span><span id="vaultProgressPct">0%</span></div>
+        <div class="progress-bar"><div id="vaultProgressBar" class="progress-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Vault File List -->
+    <div class="content-card">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-700">
+        <h3 class="font-display font-semibold text-white">Stored Encrypted Files</h3>
+        <div class="flex gap-2">
+          <button onclick="refreshVaultList()" class="btn btn-secondary text-xs flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Refresh</button>
+          <button onclick="vaultWipe()" class="btn btn-danger text-xs">🗑 Wipe All</button>
+        </div>
+      </div>
+      <div id="vaultFileList" class="p-4">
+        <p class="text-gray-500 text-sm text-center py-8">Loading vault…</p>
+      </div>
+    </div>
+  </div>
+
+  </main>
+</div><!-- end #main -->
+</div><!-- end flex wrapper -->
+
+<!-- ========== MODALS ========== -->
+<!-- Edit Asset Modal -->
+<div id="editModal" class="modal-bg hidden">
+  <div class="modal-box">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700"><h3 class="font-display font-bold text-white">Edit Asset</h3><button onclick="closeModal('editModal')" class="text-gray-400 hover:text-white text-xl leading-none">×</button></div>
+    <div class="p-6 space-y-4">
+      <input type="hidden" id="eId"/>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="form-label">Title</label><input id="eTitle" class="form-input"/></div>
+        <div><label class="form-label">Category</label><select id="eCat" class="form-select"></select></div>
+        <div><label class="form-label">Format</label><select id="eFmt" class="form-select"><option>PNG</option><option>JPG</option><option>GIF</option><option>MP4</option><option>MP3</option><option>PSD</option><option>ZIP</option></select></div>
+        <div><label class="form-label">Size</label><input id="eSize" class="form-input" placeholder="2MB"/></div>
+      </div>
+      <div><label class="form-label">Thumbnail URL / Path</label><input id="eThumb" class="form-input" oninput="updateEditPreview()"/></div>
+      <div><label class="form-label">Tags (comma separated)</label><input id="eTags" class="form-input" placeholder="trending, new, hd"/></div>
+      <div class="flex flex-wrap gap-4">
+        <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="eFeatured"/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Featured</span></label>
+        <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="ePublished" checked/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Published</span></label>
+        <label class="flex items-center gap-2 cursor-pointer"><label class="toggle"><input type="checkbox" id="eTrending"/><span class="toggle-slider"></span></label><span class="text-sm text-gray-300">Trending 🔥</span></label>
+      </div>
+      <div class="flex items-center gap-3 mt-1">
+        <img id="eThumbPreview" src="" alt="" class="w-16 h-16 rounded-xl object-cover bg-gray-800 hidden"/>
+        <div id="eThumbPH" class="w-16 h-16 rounded-xl bg-gray-800 flex items-center justify-center text-3xl">🖼</div>
+      </div>
+    </div>
+    <div class="flex gap-3 px-6 py-4 border-t border-gray-700">
+      <button onclick="saveEdit()" class="btn btn-primary flex-1 justify-center">💾 Save Changes</button>
+      <button onclick="closeModal('editModal')" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category Modal -->
+<div id="catModal" class="modal-bg hidden">
+  <div class="modal-box" style="max-width:440px;">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700"><h3 id="catModalTitle" class="font-display font-bold text-white">Add Category</h3><button onclick="closeModal('catModal')" class="text-gray-400 hover:text-white text-xl leading-none">×</button></div>
+    <div class="p-6 space-y-4">
+      <input type="hidden" id="cEditId"/>
+      <div><label class="form-label">Name *</label><input id="cName" class="form-input" placeholder="e.g. Festival Cards"/></div>
+      <div><label class="form-label">ID (URL-safe) *</label><input id="cId" class="form-input" placeholder="festival-cards" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')"/></div>
+      <div><label class="form-label">Emoji *</label><input id="cEmoji" class="form-input" placeholder="🎉" maxlength="4"/></div>
+      <div><label class="form-label">Asset Count</label><input type="number" id="cCount" class="form-input" value="0"/></div>
+      <div><label class="form-label">Gradient</label>
+        <select id="cColor" class="form-select">
+          <option value="from-pink-500 to-orange-400">Pink → Orange</option>
+          <option value="from-blue-500 to-cyan-400">Blue → Cyan</option>
+          <option value="from-purple-600 to-pink-500">Purple → Pink</option>
+          <option value="from-green-500 to-emerald-400">Green → Emerald</option>
+          <option value="from-red-500 to-pink-500">Red → Pink</option>
+          <option value="from-yellow-500 to-orange-400">Yellow → Orange</option>
+          <option value="from-indigo-500 to-purple-500">Indigo → Purple</option>
+          <option value="from-teal-500 to-cyan-500">Teal → Cyan</option>
+          <option value="from-rose-500 to-red-400">Rose → Red</option>
+          <option value="from-amber-500 to-yellow-400">Amber → Yellow</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex gap-3 px-6 py-4 border-t border-gray-700">
+      <button onclick="saveCat()" class="btn btn-primary flex-1 justify-center">💾 Save</button>
+      <button onclick="closeModal('catModal')" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Music Modal -->
+<div id="musicModal" class="modal-bg hidden">
+  <div class="modal-box" style="max-width:440px;">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700"><h3 id="musicModalTitle" class="font-display font-bold text-white">Add Track</h3><button onclick="closeModal('musicModal')" class="text-gray-400 hover:text-white text-xl leading-none">×</button></div>
+    <div class="p-6 space-y-4">
+      <input type="hidden" id="mEditId"/>
+      <div><label class="form-label">Track Title *</label><input id="mTitle" class="form-input" placeholder="Chill Lofi Study"/></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="form-label">Genre</label><input id="mGenre" class="form-input" placeholder="Lofi"/></div>
+        <div><label class="form-label">Duration</label><input id="mDur" class="form-input" placeholder="3:24"/></div>
+        <div><label class="form-label">BPM</label><input type="number" id="mBpm" class="form-input" placeholder="72"/></div>
+      </div>
+      <div>
+        <label class="form-label">Audio File (MP3/WAV)</label>
+        <div class="upload-zone" onclick="document.getElementById('mFileInput').click()">
+          <p class="text-white text-sm mb-1" id="mFileLabel">Click to upload audio file</p>
+          <p class="text-gray-500 text-xs">MP3, WAV, OGG</p>
+          <input type="file" id="mFileInput" class="hidden" accept="audio/*" onchange="handleMusicFile(this)"/>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-3 px-6 py-4 border-t border-gray-700">
+      <button onclick="saveMusic()" class="btn btn-primary flex-1 justify-center">💾 Save</button>
+      <button onclick="closeModal('musicModal')" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="delModal" class="modal-bg hidden">
+  <div class="modal-box" style="max-width:380px;">
+    <div class="p-6 text-center">
+      <div class="w-14 h-14 bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">🗑</div>
+      <h3 class="font-display font-bold text-xl text-white mb-2">Delete?</h3>
+      <p class="text-gray-400 text-sm mb-6" id="delMsg">This cannot be undone.</p>
+      <div class="flex gap-3">
+        <button onclick="confirmDel()" class="btn btn-danger flex-1 justify-center py-2.5 rounded-xl">Yes, Delete</button>
+        <button onclick="closeModal('delModal')" class="btn btn-secondary flex-1 justify-center py-2.5 rounded-xl">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/vault.js"></script>
+<script src="../js/data.js"></script>
+<script>
+// ================================================================
+// ADMIN DASHBOARD — Complete Rewrite
+// Everything saves to localStorage and site-sync.js reads it live
+// ================================================================
+
+// ---- AUTH ----
+(function(){
+  const auth=localStorage.getItem('adminAuth');
+  const exp=parseInt(localStorage.getItem('adminAuthExpiry')||'0');
+  if(auth!=='true'||Date.now()>=exp){localStorage.removeItem('adminAuth');localStorage.removeItem('adminAuthExpiry');window.location.href='login.html';}
+})();
+
+// ---- DATA STORES ----
+let A  = JSON.parse(localStorage.getItem('adminAssets') || JSON.stringify(ASSETS));
+let C  = JSON.parse(localStorage.getItem('adminCats')   || JSON.stringify(CATEGORIES));
+let M  = JSON.parse(localStorage.getItem('adminMusic')  || JSON.stringify(MUSIC_SAMPLES));
+let ST = JSON.parse(localStorage.getItem('adminSettings')|| '{}');
+
+// File blob storage (binary files as base64 dataURLs)
+// Key: 'file_<assetId>' or 'music_<musicId>'
+function saveAll(){
+  localStorage.setItem('adminAssets', JSON.stringify(A));
+  localStorage.setItem('adminCats',   JSON.stringify(C));
+  localStorage.setItem('adminMusic',  JSON.stringify(M));
+  localStorage.setItem('adminSettings', JSON.stringify(ST));
+  // Refresh sidebar count
+  const el=document.getElementById('sidebarAssetCount');
+  if(el){el.textContent=A.length;el.className='nav-badge ml-auto badge badge-purple text-xs';}
+  document.getElementById('ds-total')&&(document.getElementById('ds-total').textContent=A.length);
+  document.getElementById('ds-downloads')&&(document.getElementById('ds-downloads').textContent=fmtNum(A.reduce((s,a)=>s+a.downloads,0)));
+  document.getElementById('ds-cats')&&(document.getElementById('ds-cats').textContent=C.length);
+  document.getElementById('ds-trending')&&(document.getElementById('ds-trending').textContent=A.filter(a=>a.tags&&a.tags.includes('trending')).length);
+}
+
+// ---- DELETE STATE ----
+let delId=null,delType='asset';
+
+// ---- INIT ----
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+  tick();setInterval(tick,30000);
+  saveAll();
+  buildRecentTable();
+  populateCatDropdowns();
+  buildSectionToggles();
+  buildAdSlots();
+  loadSettings();
+  loadPageSettings();
+});
+
+function tick(){
+  const d=new Date();
+  const el=document.getElementById('clockEl');
+  if(el) el.textContent=d.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+' — '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ---- NAVIGATION ----
+function go(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const panel=document.getElementById('panel-'+id);
+  if(panel) panel.classList.add('active');
+  // Highlight nav item
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+id+"'")) n.classList.add('active');
+  });
+  const titles={
+    'dashboard':['Dashboard','Overview & statistics'],
+    'upload':['Upload Asset','Add new content'],
+    'assets':['Manage Assets','Edit, delete, feature assets'],
+    'categories':['Categories','Manage all categories'],
+    'music':['Music Files','Upload & manage tracks'],
+    'homepage':['Homepage','Edit index.html'],
+    'trending-page':['Trending Page','Edit trending.html'],
+    'categories-page':['Categories Page','Edit categories.html'],
+    'ads':['AdSense','Publisher ID & ad slots'],
+    'analytics':['Analytics','Download & performance stats'],
+    'settings':['Settings','SEO, contact, password'],
+    'vault':['Asset Vault 🔒','AES-256-GCM encrypted file storage'],
+  };
+  const t=titles[id]||[id,''];
+  document.getElementById('pageTitle').textContent=t[0];
+  document.getElementById('pageSubtitle').textContent=t[1];
+  // Rebuild relevant sections
+  if(id==='assets'){populateCatDropdowns();buildAssetsTable();}
+  if(id==='categories') buildCatsGrid();
+  if(id==='music') buildMusicTable();
+  if(id==='analytics') buildAnalytics();
+  if(id==='homepage') buildSectionToggles();
+  if(id==='vault'){populateVaultSelect();refreshVaultList();}
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.add('hidden');
+  lucide.createIcons();
+}
+
+// ---- SIDEBAR ----
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  if(window.innerWidth<768){
+    s.classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('hidden');
+  } else {
+    s.classList.toggle('collapsed');
+  }
+}
+function closeMobileSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.add('hidden');
+}
+
+// ================================================================
+// RECENT ASSETS TABLE (Dashboard)
+// ================================================================
+function buildRecentTable(){
+  const el=document.getElementById('recentTbl');
+  if(!el) return;
+  const recent=[...A].reverse().slice(0,6);
+  el.innerHTML=`<thead><tr><th>Asset</th><th>Category</th><th>Format</th><th>Downloads</th></tr></thead><tbody>`+
+    recent.map(a=>`<tr>
+      <td class="flex items-center gap-3">
+        <img src="${a.thumb||''}" onerror="this.style.display='none'" class="img-thumb" alt=""/>
+        <span class="truncate max-w-40 text-gray-200">${a.title}</span>
+      </td>
+      <td><span class="badge badge-purple capitalize">${a.category}</span></td>
+      <td><span class="badge ${fmtBadge(a.format)}">${a.format}</span></td>
+      <td class="text-green-400 font-medium">${fmtNum(a.downloads)}</td>
+    </tr>`).join('')+'</tbody>';
+}
+
+// ================================================================
+// UPLOAD — REAL FILE HANDLING
+// ================================================================
+let mainFileData=null; // base64 dataURL of main file
+let thumbFileData=null; // base64 dataURL of thumbnail
+
+function handleMainFile(inp){
+  const f=inp.files[0]; if(!f) return;
+  const ext=f.name.split('.').pop().toUpperCase();
+  const icons={PNG:'🖼',JPG:'🖼',GIF:'🎞',MP4:'🎬',MP3:'🎵',PSD:'🎨',ZIP:'📦'};
+  document.getElementById('mainDropIcon').textContent=icons[ext]||'📄';
+  document.getElementById('mainDropLabel').textContent='✅ '+f.name+' selected';
+  // Set format dropdown
+  const fmtEl=document.getElementById('uFmt');
+  if(fmtEl&&['PNG','JPG','GIF','MP4','MP3','PSD','ZIP'].includes(ext)) fmtEl.value=ext;
+  // Read as dataURL for storage
+  const reader=new FileReader();
+  reader.onload=e=>{
+    mainFileData=e.target.result;
+    // Show file info
+    document.getElementById('mainFileInfo').classList.remove('hidden');
+    document.getElementById('mainFileIcon').textContent=icons[ext]||'📄';
+    document.getElementById('mainFileName').textContent=f.name;
+    document.getElementById('mainFileSize').textContent=fmtBytes(f.size);
+    // If it's an image, also use as thumbnail if thumb not set
+    if(['PNG','JPG','GIF'].includes(ext)&&!thumbFileData){
+      thumbFileData=e.target.result;
+      document.getElementById('uThumbUrl').value='';
+      document.getElementById('thumbDropIcon').textContent='✅';
+      document.getElementById('thumbDropLabel').textContent='Using main file as thumbnail';
+      livePreviewUpdate();
+    }
+    toast('✅ File loaded: '+f.name,'ok');
+  };
+  reader.readAsDataURL(f);
+}
+
+function handleThumbFile(inp){
+  const f=inp.files[0]; if(!f) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    thumbFileData=e.target.result;
+    document.getElementById('uThumbUrl').value='';
+    document.getElementById('thumbDropIcon').textContent='✅';
+    document.getElementById('thumbDropLabel').textContent='✅ '+f.name;
+    livePreviewUpdate();
+    toast('✅ Thumbnail loaded','ok');
+  };
+  reader.readAsDataURL(f);
+}
+
+function handleMusicFile(inp){
+  const f=inp.files[0]; if(!f) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    // Store with key 'mfile_pending' — assigned proper key on save
+    window._pendingMusicFile={data:e.target.result,name:f.name};
+    document.getElementById('mFileLabel').textContent='✅ '+f.name;
+    toast('✅ Audio file loaded','ok');
+  };
+  reader.readAsDataURL(f);
+}
+
+function clearMainFile(){
+  mainFileData=null;
+  document.getElementById('mainFileInfo').classList.add('hidden');
+  document.getElementById('mainDropIcon').textContent='📤';
+  document.getElementById('mainDropLabel').textContent='Click or drag & drop asset file';
+  document.getElementById('mainFileInput').value='';
+}
+
+function dz(e,id){e.preventDefault();document.getElementById(id)?.classList.add('drag');}
+function dl(e,id){document.getElementById(id)?.classList.remove('drag');}
+function dropMain(e){e.preventDefault();dl(e,'mainDropZone');const f=e.dataTransfer.files[0];if(f){const inp={files:[f]};handleMainFile(inp);}}
+function dropThumb(e){e.preventDefault();dl(e,'thumbDropZone');const f=e.dataTransfer.files[0];if(f){const inp={files:[f]};handleThumbFile(inp);}}
+
+function livePreviewUpdate(){
+  const title=document.getElementById('uTitle')?.value||'';
+  const cat=document.getElementById('uCat')?.value||'';
+  const fmt=document.getElementById('uFmt')?.value||'';
+  const urlInput=document.getElementById('uThumbUrl')?.value||'';
+  const thumbSrc=thumbFileData||urlInput||'';
+  const img=document.getElementById('livePreviewImg');
+  const ph=document.getElementById('livePreviewPlaceholder');
+  if(thumbSrc){img.src=thumbSrc;img.classList.remove('hidden');ph.classList.add('hidden');}
+  else{img.classList.add('hidden');ph.classList.remove('hidden');}
+  document.getElementById('livePreviewTitle').textContent=title||'Title will appear here';
+  const catEl=document.getElementById('livePreviewCat');
+  if(cat){catEl.textContent=cat;catEl.classList.remove('hidden');}else{catEl.classList.add('hidden');}
+  document.getElementById('livePreviewFmt').textContent=fmt||'PNG';
+}
+
+function saveAsset(){
+  const title=(document.getElementById('uTitle')?.value||'').trim();
+  const cat=document.getElementById('uCat')?.value||'';
+  const fmt=document.getElementById('uFmt')?.value||'PNG';
+  const tags=(document.getElementById('uTags')?.value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const urlInput=(document.getElementById('uThumbUrl')?.value||'').trim();
+  const thumbSrc=thumbFileData||urlInput||'';
+  if(!title){toast('⚠️ Title is required','warn');return;}
+  if(!cat){toast('⚠️ Category is required','warn');return;}
+  if(!thumbSrc&&!mainFileData){toast('⚠️ Upload a file or set a thumbnail URL','warn');return;}
+
+  const trending=document.getElementById('uTrending')?.checked||false;
+  if(trending&&!tags.includes('trending')) tags.push('trending');
+  if(!tags.length) tags.push('new');
+
+  const newId=Math.max(0,...A.map(a=>a.id))+1;
+  const asset={
+    id:newId, title, category:cat, format:fmt,
+    size:mainFileData?fmtBytes(Math.round(mainFileData.length*0.75)):'—',
+    downloads:0, likes:0,
+    thumb:thumbSrc||mainFileData||'',
+    downloadUrl:'__local__',  // signals to use stored blob
+    tags, featured:document.getElementById('uFeatured')?.checked||false,
+    published:document.getElementById('uPublished')?.checked!==false,
+    addedAt:Date.now()
+  };
+  A.push(asset);
+
+  // Store the actual file blob separately to avoid hitting single-key size limits
+  if(mainFileData){
+    try{localStorage.setItem('file_'+newId, mainFileData);}
+    catch(e){toast('⚠️ File too large for browser storage. Use a CDN URL for big files.','warn');}
+  }
+
+  saveAll();
+  buildRecentTable();
+  toast('🎉 Asset "'+title+'" saved & live on site!','ok');
+  resetUpload();
+}
+
+function resetUpload(){
+  mainFileData=null; thumbFileData=null;
+  ['uTitle','uTags','uThumbUrl'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  ['uFeatured','uTrending'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=false;});
+  const e=document.getElementById('uPublished');if(e)e.checked=true;
+  document.getElementById('mainFileInfo').classList.add('hidden');
+  document.getElementById('mainDropIcon').textContent='📤';
+  document.getElementById('mainDropLabel').textContent='Click or drag & drop asset file';
+  document.getElementById('thumbDropIcon').textContent='🖼';
+  document.getElementById('thumbDropLabel').textContent='Click or drag thumbnail image';
+  document.getElementById('mainFileInput').value='';
+  document.getElementById('thumbFileInput').value='';
+  document.getElementById('livePreviewImg').classList.add('hidden');
+  document.getElementById('livePreviewPlaceholder').classList.remove('hidden');
+  document.getElementById('livePreviewTitle').textContent='Title will appear here';
+  document.getElementById('livePreviewFmt').textContent='PNG';
+  document.getElementById('livePreviewCat').classList.add('hidden');
+}
+
+// CSV import
+function importCSV(inp){
+  const f=inp.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const lines=e.target.result.split('\n').filter(l=>l.trim());
+    if(lines.length<2){toast('⚠️ CSV is empty or has no data rows','warn');return;}
+    const headers=lines[0].split(',').map(h=>h.trim().replace(/"/g,''));
+    let added=0;
+    lines.slice(1).forEach(row=>{
+      const vals=row.match(/(".*?"|[^,]+)/g)||[];
+      const obj={};headers.forEach((h,i)=>{obj[h]=(vals[i]||'').replace(/"/g,'').trim();});
+      if(!obj.title) return;
+      const newId=Math.max(0,...A.map(a=>a.id))+1;
+      A.push({id:newId,title:obj.title,category:obj.category||'',format:obj.format||'PNG',size:obj.size||'—',downloads:0,likes:0,thumb:obj.thumb||'',downloadUrl:obj.downloadUrl||'#',tags:(obj.tags||'new').split('|'),featured:obj.featured==='true',published:true,addedAt:Date.now()});
+      added++;
+    });
+    saveAll();buildRecentTable();
+    toast('✅ Imported '+added+' assets from CSV','ok');
+  };
+  reader.readAsText(f);
+  inp.value='';
+}
+function downloadCSVTemplate(){
+  const csv='title,category,format,size,thumb,downloadUrl,tags,featured\n"Example Asset","wallpapers","JPG","2MB","https://example.com/thumb.jpg","https://example.com/file.jpg","trending|hd","false"';
+  const b=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='assets_template.csv';a.click();
+}
+
+// ================================================================
+// ASSETS TABLE
+// ================================================================
+const FMT_BADGE_MAP={PNG:'badge-blue',JPG:'badge-green',GIF:'badge-yellow',MP4:'badge-red',MP3:'badge-purple',PSD:'badge-yellow',ZIP:'badge-gray'};
+function fmtBadge(f){return FMT_BADGE_MAP[f]||'badge-gray';}
+
+function populateCatDropdowns(){
+  ['uCat','eCat','assetCatF'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const firstOpt=id==='assetCatF'?'<option value="">All Categories</option>':'';
+    el.innerHTML=firstOpt+C.map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
+  });
+}
+
+function buildAssetsTable(){
+  populateCatDropdowns();
+  filterAssets();
+}
+
+function filterAssets(){
+  const q=(document.getElementById('assetSearch')?.value||'').toLowerCase();
+  const cat=document.getElementById('assetCatF')?.value||'';
+  const fmt=document.getElementById('assetFmtF')?.value||'';
+  const filtered=A.filter(a=>
+    (!q||a.title.toLowerCase().includes(q))&&
+    (!cat||a.category===cat)&&
+    (!fmt||a.format===fmt)
+  );
+  const tbody=document.getElementById('assetsTbody');
+  document.getElementById('assetsCount').textContent=`Showing ${filtered.length} of ${A.length} assets`;
+  if(!tbody)return;
+  tbody.innerHTML=filtered.map(a=>`
+    <tr id="row-${a.id}">
+      <td><input type="checkbox" class="acheck" data-id="${a.id}" onchange="updateBulkBtn()"/></td>
+      <td>
+        <div class="flex items-center gap-3">
+          <img src="${a.thumb||''}" onerror="this.style.display='none'" class="img-thumb" alt=""/>
+          <div><p class="text-gray-200 font-medium text-sm truncate max-w-44">${a.title}</p><p class="text-gray-500 text-xs">${a.size||'—'}</p></div>
+        </div>
+      </td>
+      <td><span class="badge badge-purple capitalize">${a.category}</span></td>
+      <td><span class="badge ${fmtBadge(a.format)}">${a.format}</span></td>
+      <td class="text-green-400 font-medium">${fmtNum(a.downloads)}</td>
+      <td><span class="badge ${a.published!==false?'badge-green':'badge-red'}">${a.published!==false?'Live':'Draft'}</span></td>
+      <td>
+        <label class="toggle" style="width:38px;height:20px;">
+          <input type="checkbox" ${a.tags&&a.tags.includes('trending')?'checked':''} onchange="toggleTag(${a.id},'trending',this.checked)"/>
+          <span class="toggle-slider"></span>
+        </label>
+      </td>
+      <td>
+        <label class="toggle" style="width:38px;height:20px;">
+          <input type="checkbox" ${a.featured?'checked':''} onchange="toggleFeatured(${a.id},this.checked)"/>
+          <span class="toggle-slider"></span>
+        </label>
+      </td>
+      <td>
+        <div class="flex gap-1.5">
+          <button onclick="openEdit(${a.id})" class="btn btn-success btn-sm">Edit</button>
+          <button onclick="askDel(${a.id},'asset','${escStr(a.title)}')" class="btn btn-danger btn-sm">Del</button>
+          ${a.downloadUrl==='__local__'&&localStorage.getItem('file_'+a.id)?`<button onclick="downloadLocal(${a.id})" class="btn btn-secondary btn-sm">⬇</button>`:''}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function selAll(cb){document.querySelectorAll('.acheck').forEach(c=>c.checked=cb.checked);updateBulkBtn();}
+function updateBulkBtn(){
+  const any=[...document.querySelectorAll('.acheck')].some(c=>c.checked);
+  document.getElementById('bulkDelBtn').classList.toggle('hidden',!any);
+}
+function bulkDelete(){
+  const ids=[...document.querySelectorAll('.acheck:checked')].map(c=>parseInt(c.dataset.id));
+  if(!ids.length)return;
+  if(!confirm(`Delete ${ids.length} assets? Cannot be undone.`))return;
+  ids.forEach(id=>localStorage.removeItem('file_'+id));
+  A=A.filter(a=>!ids.includes(a.id));
+  saveAll();buildAssetsTable();
+  toast('🗑 '+ids.length+' assets deleted','ok');
+}
+function toggleFeatured(id,val){const a=A.find(x=>x.id===id);if(a){a.featured=val;saveAll();}}
+function toggleTag(id,tag,val){
+  const a=A.find(x=>x.id===id);if(!a)return;
+  if(!a.tags)a.tags=[];
+  if(val&&!a.tags.includes(tag)) a.tags.push(tag);
+  else if(!val) a.tags=a.tags.filter(t=>t!==tag);
+  saveAll();
+}
+
+// Download locally stored file
+function downloadLocal(id){
+  const data=localStorage.getItem('file_'+id);
+  const a=A.find(x=>x.id===id);
+  if(!data){toast('⚠️ No local file found. Add a download URL.','warn');return;}
+  const link=document.createElement('a');
+  link.href=data;
+  link.download=(a?.title||'asset')+'.'+((a?.format||'png').toLowerCase());
+  link.click();
+  toast('⬇️ Downloading from local storage…','ok');
+}
+
+// ---- EDIT MODAL ----
+function openEdit(id){
+  const a=A.find(x=>x.id===id);if(!a)return;
+  document.getElementById('eId').value=a.id;
+  document.getElementById('eTitle').value=a.title;
+  document.getElementById('eFmt').value=a.format;
+  document.getElementById('eSize').value=a.size||'';
+  document.getElementById('eThumb').value=a.thumb||'';
+  document.getElementById('eTags').value=(a.tags||[]).join(', ');
+  document.getElementById('eFeatured').checked=!!a.featured;
+  document.getElementById('ePublished').checked=a.published!==false;
+  document.getElementById('eTrending').checked=!!(a.tags&&a.tags.includes('trending'));
+  // Category dropdown
+  const sel=document.getElementById('eCat');
+  sel.innerHTML=C.map(c=>`<option value="${c.id}" ${c.id===a.category?'selected':''}>${c.emoji} ${c.name}</option>`).join('');
+  updateEditPreview();
+  document.getElementById('editModal').classList.remove('hidden');
+  lucide.createIcons();
+}
+function updateEditPreview(){
+  const url=document.getElementById('eThumb')?.value||'';
+  const img=document.getElementById('eThumbPreview');
+  const ph=document.getElementById('eThumbPH');
+  if(url){img.src=url;img.classList.remove('hidden');ph.classList.add('hidden');}
+  else{img.classList.add('hidden');ph.classList.remove('hidden');}
+}
+function saveEdit(){
+  const id=parseInt(document.getElementById('eId').value);
+  const a=A.find(x=>x.id===id);if(!a)return;
+  a.title=document.getElementById('eTitle').value;
+  a.category=document.getElementById('eCat').value;
+  a.format=document.getElementById('eFmt').value;
+  a.size=document.getElementById('eSize').value;
+  a.thumb=document.getElementById('eThumb').value;
+  const tags=document.getElementById('eTags').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const trending=document.getElementById('eTrending').checked;
+  if(trending&&!tags.includes('trending')) tags.push('trending');
+  else if(!trending) tags.splice(tags.indexOf('trending'),1);
+  a.tags=tags;
+  a.featured=document.getElementById('eFeatured').checked;
+  a.published=document.getElementById('ePublished').checked;
+  saveAll();buildAssetsTable();buildRecentTable();
+  closeModal('editModal');
+  toast('✅ Asset updated!','ok');
+}
+
+// ================================================================
+// CATEGORIES
+// ================================================================
+function buildCatsGrid(){
+  const g=document.getElementById('catsGrid');if(!g)return;
+  g.innerHTML=C.map(cat=>`
+    <div class="card p-4 flex items-start gap-3">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center text-2xl flex-shrink-0">${cat.emoji}</div>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-white">${cat.name}</p>
+        <p class="text-gray-400 text-xs mt-0.5">${(cat.count||0).toLocaleString()} assets · ${cat.id}</p>
+        <div class="flex gap-2 mt-3">
+          <button onclick="openCatModal('${cat.id}')" class="btn btn-success btn-sm">Edit</button>
+          <button onclick="askDel('${cat.id}','category','${escStr(cat.name)}')" class="btn btn-danger btn-sm">Delete</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+let editCatId=null;
+function openCatModal(id){
+  editCatId=id||null;
+  document.getElementById('catModalTitle').textContent=id?'Edit Category':'Add Category';
+  if(id){
+    const cat=C.find(c=>c.id===id);if(!cat)return;
+    document.getElementById('cName').value=cat.name;
+    document.getElementById('cId').value=cat.id;
+    document.getElementById('cEmoji').value=cat.emoji;
+    document.getElementById('cCount').value=cat.count||0;
+    document.getElementById('cColor').value=cat.color;
+  } else {
+    ['cName','cId','cEmoji'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('cCount').value='0';
+  }
+  document.getElementById('catModal').classList.remove('hidden');
+}
+function saveCat(){
+  const name=document.getElementById('cName').value.trim();
+  const id=document.getElementById('cId').value.trim();
+  const emoji=document.getElementById('cEmoji').value.trim();
+  if(!name||!id||!emoji){toast('⚠️ Name, ID and Emoji required','warn');return;}
+  if(editCatId){
+    const cat=C.find(c=>c.id===editCatId);
+    if(cat){Object.assign(cat,{name,id,emoji,count:parseInt(document.getElementById('cCount').value)||0,color:document.getElementById('cColor').value});}
+  } else {
+    if(C.find(c=>c.id===id)){toast('⚠️ Category ID already exists','warn');return;}
+    C.push({id,name,emoji,color:document.getElementById('cColor').value,count:parseInt(document.getElementById('cCount').value)||0});
+  }
+  saveAll();populateCatDropdowns();buildCatsGrid();
+  closeModal('catModal');
+  toast('✅ Category saved!','ok');
+}
+
+// ================================================================
+// MUSIC
+// ================================================================
+function buildMusicTable(){
+  const tbody=document.getElementById('musicTbody');if(!tbody)return;
+  tbody.innerHTML=M.map(m=>`<tr>
+    <td><div class="flex items-center gap-2"><span class="text-xl">🎵</span><span class="text-gray-200">${m.title}</span></div></td>
+    <td><span class="badge badge-purple">${m.genre||'—'}</span></td>
+    <td class="text-gray-400">${m.duration||'—'}</td>
+    <td class="text-gray-400">${m.bpm||'—'} BPM</td>
+    <td class="text-green-400">${fmtNum(m.downloads)}</td>
+    <td>${localStorage.getItem('mfile_'+m.id)?`<span class="badge badge-green">Local File</span>`:'<span class="badge badge-gray">No file</span>'}</td>
+    <td><div class="flex gap-1.5">
+      <button onclick="openMusicModal(${m.id})" class="btn btn-success btn-sm">Edit</button>
+      ${localStorage.getItem('mfile_'+m.id)?`<button onclick="playMusic(${m.id})" class="btn btn-secondary btn-sm">▶</button>`:''}
+      <button onclick="askDel(${m.id},'music','${escStr(m.title)}')" class="btn btn-danger btn-sm">Del</button>
+    </div></td>
+  </tr>`).join('');
+}
+let editMusicId=null;
+function openMusicModal(id){
+  editMusicId=id||null;
+  document.getElementById('musicModalTitle').textContent=id?'Edit Track':'Add Track';
+  if(id){
+    const m=M.find(x=>x.id===id);if(!m)return;
+    document.getElementById('mTitle').value=m.title;
+    document.getElementById('mGenre').value=m.genre||'';
+    document.getElementById('mDur').value=m.duration||'';
+    document.getElementById('mBpm').value=m.bpm||'';
+    document.getElementById('mFileLabel').textContent=localStorage.getItem('mfile_'+id)?'✅ File stored':'Click to upload audio file';
+  } else {
+    ['mTitle','mGenre','mDur','mBpm'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('mFileLabel').textContent='Click to upload audio file';
+    window._pendingMusicFile=null;
+  }
+  document.getElementById('musicModal').classList.remove('hidden');
+}
+function saveMusic(){
+  const title=document.getElementById('mTitle').value.trim();
+  if(!title){toast('⚠️ Track title required','warn');return;}
+  if(editMusicId){
+    const m=M.find(x=>x.id===editMusicId);
+    if(m){m.title=title;m.genre=document.getElementById('mGenre').value;m.duration=document.getElementById('mDur').value;m.bpm=parseInt(document.getElementById('mBpm').value)||0;}
+    if(window._pendingMusicFile) localStorage.setItem('mfile_'+editMusicId,window._pendingMusicFile.data);
+  } else {
+    const newId=Math.max(0,...M.map(x=>x.id))+1;
+    M.push({id:newId,title,genre:document.getElementById('mGenre').value,duration:document.getElementById('mDur').value,bpm:parseInt(document.getElementById('mBpm').value)||0,downloads:0});
+    if(window._pendingMusicFile) localStorage.setItem('mfile_'+newId,window._pendingMusicFile.data);
+  }
+  window._pendingMusicFile=null;
+  saveAll();buildMusicTable();closeModal('musicModal');
+  toast('✅ Track saved!','ok');
+}
+function playMusic(id){
+  const data=localStorage.getItem('mfile_'+id);
+  if(!data){toast('No audio file stored','warn');return;}
+  const audio=new Audio(data);audio.play();
+  toast('▶ Playing track…','ok');
+}
+
+// ================================================================
+// DELETE
+// ================================================================
+function askDel(id,type,label){
+  delId=id;delType=type;
+  document.getElementById('delMsg').textContent=`Are you sure you want to delete "${label}"? This cannot be undone.`;
+  document.getElementById('delModal').classList.remove('hidden');
+}
+function confirmDel(){
+  if(delType==='asset'){
+    localStorage.removeItem('file_'+delId);
+    A=A.filter(a=>a.id!==delId);
+    saveAll();buildAssetsTable();buildRecentTable();
+    toast('🗑 Asset deleted','ok');
+  } else if(delType==='category'){
+    C=C.filter(c=>c.id!==delId);
+    saveAll();buildCatsGrid();populateCatDropdowns();
+    toast('🗑 Category deleted','ok');
+  } else if(delType==='music'){
+    localStorage.removeItem('mfile_'+delId);
+    M=M.filter(m=>m.id!==delId);
+    saveAll();buildMusicTable();
+    toast('🗑 Track deleted','ok');
+  }
+  closeModal('delModal');
+}
+
+// ================================================================
+// HOMEPAGE SETTINGS
+// ================================================================
+const SECTIONS_LIST=[
+  {id:'trending',label:'🔥 Trending Assets'},
+  {id:'categories',label:'📦 Popular Categories'},
+  {id:'music',label:'🎵 Free Music'},
+  {id:'invitations',label:'💌 Invitation Cards'},
+  {id:'gifs',label:'🎞 GIF Cards'},
+  {id:'wallpapers',label:'🖼 Wallpapers'},
+];
+function buildSectionToggles(){
+  const el=document.getElementById('sectionToggles');if(!el)return;
+  const vis=JSON.parse(localStorage.getItem('sectionVisibility')||'{}');
+  el.innerHTML=SECTIONS_LIST.map(s=>`
+    <div class="flex items-center justify-between p-3 bg-gray-800 rounded-xl">
+      <span class="text-sm text-gray-300">${s.label}</span>
+      <label class="toggle"><input type="checkbox" id="sv-${s.id}" ${vis[s.id]!==false?'checked':''} onchange="saveSectionVis('${s.id}',this.checked)"/><span class="toggle-slider"></span></label>
+    </div>`).join('');
+}
+function saveSectionVis(id,val){
+  const vis=JSON.parse(localStorage.getItem('sectionVisibility')||'{}');
+  vis[id]=val;
+  localStorage.setItem('sectionVisibility',JSON.stringify(vis));
+  toast(`✅ Section "${id}" ${val?'shown':'hidden'} on homepage`,'ok');
+}
+function saveHomepageHero(){
+  ST.heroTitle1=document.getElementById('hHero1').value;
+  ST.heroTitle2=document.getElementById('hHero2').value;
+  ST.heroSubtitle=document.getElementById('hHeroSub').value;
+  ST.heroSearchPlaceholder=document.getElementById('hSearchPH').value;
+  ST.stat1Num=document.getElementById('hStat1n').value;
+  ST.stat1Label=document.getElementById('hStat1l').value;
+  ST.stat2Num=document.getElementById('hStat2n').value;
+  ST.stat2Label=document.getElementById('hStat2l').value;
+  saveAll();toast('✅ Homepage hero saved — refresh the website!','ok');
+}
+function saveAnnouncement(){
+  ST.announcement={text:document.getElementById('annText').value,enabled:document.getElementById('annEnabled').checked,color:document.getElementById('annColor').value};
+  saveAll();toast('✅ Announcement saved!','ok');
+}
+function saveTrendingKW(){
+  ST.trendingKeywords=document.getElementById('trendKW').value;
+  saveAll();toast('✅ Trending keywords saved!','ok');
+}
+
+// ================================================================
+// TRENDING PAGE SETTINGS
+// ================================================================
+function saveTrendingPage(){
+  ST.trendingPage={
+    title:document.getElementById('tpTitle').value,
+    subtitle:document.getElementById('tpSubtitle').value,
+    badge:document.getElementById('tpBadge').value,
+    defaultPeriod:document.getElementById('tpDefaultPeriod').value,
+    showTop3:document.getElementById('tpShowTop3').checked,
+    top3Title:document.getElementById('tpTop3Title').value,
+    leaderboard:document.getElementById('tpLeaderboard').checked,
+    stats:document.getElementById('tpStats').checked,
+    catStrip:document.getElementById('tpCatStrip').checked,
+    metaTitle:document.getElementById('tpMetaTitle').value,
+    metaDesc:document.getElementById('tpMetaDesc').value,
+  };
+  saveAll();toast('✅ Trending page settings saved — live on trending.html!','ok');
+}
+
+// ================================================================
+// CATEGORIES PAGE SETTINGS
+// ================================================================
+function saveCatPage(){
+  ST.catPage={
+    title:document.getElementById('cpTitle').value,
+    subtitle:document.getElementById('cpSubtitle').value,
+    searchPlaceholder:document.getElementById('cpSearchPH').value,
+    spotlightDefault:document.getElementById('cpSpotlightDefault').value,
+    perPage:parseInt(document.getElementById('cpPerPage').value)||20,
+    showCatGrid:document.getElementById('cpShowCatGrid').checked,
+    showBrowser:document.getElementById('cpShowBrowser').checked,
+    showSpotlight:document.getElementById('cpShowSpotlight').checked,
+    showTrendSearch:document.getElementById('cpShowTrendSearch').checked,
+    showSidebar:document.getElementById('cpShowSidebar').checked,
+    metaTitle:document.getElementById('cpMetaTitle').value,
+    metaDesc:document.getElementById('cpMetaDesc').value,
+  };
+  saveAll();toast('✅ Categories page settings saved — live on categories.html!','ok');
+}
+
+// ================================================================
+// ADS
+// ================================================================
+const AD_SLOTS=[
+  {id:'header',label:'Header Banner',size:'728×90',pos:'Top of all pages'},
+  {id:'content1',label:'In-Content Rectangle',size:'336×280',pos:'After categories'},
+  {id:'sidebar',label:'Sidebar Vertical',size:'160×600',pos:'Right sidebar — desktop'},
+  {id:'mobile',label:'Sticky Mobile Banner',size:'320×50',pos:'Fixed bottom mobile'},
+  {id:'download',label:'Download Modal Ad',size:'300×100',pos:'Inside download modal'},
+  {id:'content2',label:'Category Page Banner',size:'728×90',pos:'Below hero'},
+  {id:'bottom',label:'Bottom Page Ad',size:'728×90',pos:'Above footer'},
+];
+function buildAdSlots(){
+  const g=document.getElementById('adSlotsGrid');if(!g)return;
+  const saved=JSON.parse(localStorage.getItem('adSlots')||'{}');
+  g.innerHTML=AD_SLOTS.map(s=>`
+    <div class="card p-4 space-y-2">
+      <p class="text-white font-semibold text-sm">${s.label}</p>
+      <p class="text-gray-500 text-xs">${s.size} · ${s.pos}</p>
+      <input type="text" id="adslot-${s.id}" class="form-input font-mono text-xs" placeholder="Ad slot ID" value="${saved[s.id]||''}"/>
+      <button onclick="saveSlot('${s.id}')" class="btn btn-secondary w-full text-xs justify-center py-1.5">💾 Save Slot</button>
+    </div>`).join('');
+}
+function saveSlot(id){
+  const saved=JSON.parse(localStorage.getItem('adSlots')||'{}');
+  saved[id]=document.getElementById('adslot-'+id).value;
+  localStorage.setItem('adSlots',JSON.stringify(saved));
+  toast('✅ Slot saved!','ok');
+}
+function saveAdConfig(){
+  ST.publisherId=document.getElementById('pubId').value;
+  ST.dlCountdown=parseInt(document.getElementById('dlCountdown').value)||5;
+  ST.autoAds=document.getElementById('adAutoAds').checked;
+  ST.showModalAd=document.getElementById('adModal').checked;
+  ST.showStickyAd=document.getElementById('adSticky').checked;
+  saveAll();toast('✅ AdSense config saved — live on all pages!','ok');
+}
+
+// ================================================================
+// ANALYTICS
+// ================================================================
+function buildAnalytics(){
+  const totalDL=A.reduce((s,a)=>s+a.downloads,0);
+  const totalLikes=A.reduce((s,a)=>s+a.likes,0);
+  document.getElementById('aSumDL').textContent=fmtNum(totalDL);
+  document.getElementById('aSumLikes').textContent=fmtNum(totalLikes);
+  document.getElementById('aSumTrending').textContent=A.filter(a=>a.tags&&a.tags.includes('trending')).length;
+  document.getElementById('aSumFeatured').textContent=A.filter(a=>a.featured).length;
+  const tbody=document.getElementById('topDLBody');
+  if(tbody){
+    const top=[...A].sort((a,b)=>b.downloads-a.downloads).slice(0,10);
+    tbody.innerHTML=top.map((a,i)=>`<tr>
+      <td class="font-bold text-gray-400">#${i+1}</td>
+      <td><div class="flex items-center gap-3"><img src="${a.thumb||''}" onerror="this.style.display='none'" class="img-thumb"/><span class="text-gray-200 truncate max-w-48">${a.title}</span></div></td>
+      <td><span class="badge badge-purple capitalize">${a.category}</span></td>
+      <td class="text-green-400 font-semibold">${fmtNum(a.downloads)}</td>
+      <td class="text-red-400">❤ ${fmtNum(a.likes)}</td>
+    </tr>`).join('');
+  }
+}
+
+// ================================================================
+// SETTINGS
+// ================================================================
+function loadSettings(){
+  if(ST.publisherId) document.getElementById('pubId').value=ST.publisherId;
+  if(ST.dlCountdown) document.getElementById('dlCountdown').value=ST.dlCountdown;
+  if(ST.contactPhone) document.getElementById('ctPhone').value=ST.contactPhone;
+  if(ST.contactEmail) document.getElementById('ctEmail').value=ST.contactEmail;
+  if(ST.contactWA) document.getElementById('ctWA').value=ST.contactWA;
+  if(ST.contactTG) document.getElementById('ctTG').value=ST.contactTG;
+  if(ST.seoName) document.getElementById('seoName').value=ST.seoName;
+  if(ST.trendingKeywords) document.getElementById('trendKW').value=ST.trendingKeywords;
+  if(ST.announcement){
+    if(document.getElementById('annText')) document.getElementById('annText').value=ST.announcement.text||'';
+    if(document.getElementById('annEnabled')) document.getElementById('annEnabled').checked=!!ST.announcement.enabled;
+    if(document.getElementById('annColor')) document.getElementById('annColor').value=ST.announcement.color||'brand';
+  }
+  if(ST.heroTitle1&&document.getElementById('hHero1')) document.getElementById('hHero1').value=ST.heroTitle1;
+  if(ST.heroTitle2&&document.getElementById('hHero2')) document.getElementById('hHero2').value=ST.heroTitle2;
+  if(ST.stat1Num&&document.getElementById('hStat1n')) document.getElementById('hStat1n').value=ST.stat1Num;
+}
+function loadPageSettings(){
+  if(ST.trendingPage){
+    const tp=ST.trendingPage;
+    if(tp.title) document.getElementById('tpTitle').value=tp.title;
+    if(tp.subtitle) document.getElementById('tpSubtitle').value=tp.subtitle;
+    if(tp.defaultPeriod) document.getElementById('tpDefaultPeriod').value=tp.defaultPeriod;
+  }
+  if(ST.catPage){
+    const cp=ST.catPage;
+    if(cp.title) document.getElementById('cpTitle').value=cp.title;
+    if(cp.subtitle) document.getElementById('cpSubtitle').value=cp.subtitle;
+    if(cp.perPage) document.getElementById('cpPerPage').value=cp.perPage;
+  }
+}
+function saveSEO(){
+  ST.seoName=document.getElementById('seoName').value;
+  ST.seoDesc=document.getElementById('seoDesc').value;
+  ST.seoKW=document.getElementById('seoKW').value;
+  ST.seoUrl=document.getElementById('seoUrl').value;
+  saveAll();toast('✅ SEO settings saved!','ok');
+}
+function saveContact(){
+  ST.contactPhone=document.getElementById('ctPhone').value;
+  ST.contactEmail=document.getElementById('ctEmail').value;
+  ST.contactWA=document.getElementById('ctWA').value;
+  ST.contactTG=document.getElementById('ctTG').value;
+  saveAll();toast('✅ Contact info saved — live on all pages!','ok');
+}
+function changePwd(){
+  const old=document.getElementById('oldPwd').value;
+  const nw=document.getElementById('newPwd').value;
+  const cnf=document.getElementById('cnfPwd').value;
+  const currentPwd=ST.adminPass||'admin123';
+  if(old!==currentPwd){toast('❌ Current password is wrong','err');return;}
+  if(nw.length<8){toast('⚠️ Password must be 8+ characters','warn');return;}
+  if(nw!==cnf){toast('⚠️ Passwords do not match','warn');return;}
+  ST.adminPass=nw;
+  saveAll();
+  ['oldPwd','newPwd','cnfPwd'].forEach(i=>document.getElementById(i).value='');
+  toast('✅ Password changed!','ok');
+}
+function backupData(){
+  const bk={assets:A,categories:C,music:M,settings:ST,ts:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(bk,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='freeassetshub_backup_'+Date.now()+'.json';a.click();
+  toast('💾 Backup downloaded!','ok');
+}
+function clearAllData(){
+  if(!confirm('⚠️ RESET ALL ADMIN DATA? This will delete all your changes and restore defaults. Cannot be undone!'))return;
+  ['adminAssets','adminCats','adminMusic','adminSettings','sectionVisibility','adSlots'].forEach(k=>localStorage.removeItem(k));
+  A=JSON.parse(JSON.stringify(ASSETS));C=JSON.parse(JSON.stringify(CATEGORIES));M=JSON.parse(JSON.stringify(MUSIC_SAMPLES));ST={};
+  saveAll();window.location.reload();
+}
+function exportCSV(){
+  const hdr='id,title,category,format,size,downloads,likes,featured,tags';
+  const rows=A.map(a=>`${a.id},"${a.title}",${a.category},${a.format},${a.size||''},${a.downloads},${a.likes},${a.featured},"${(a.tags||[]).join('|')}"`);
+  const blob=new Blob([hdr+'\n'+rows.join('\n')],{type:'text/csv'});
+  const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='assets.csv';link.click();
+  toast('📋 Exported!','ok');
+}
+
+// ================================================================
+// MODALS
+// ================================================================
+function closeModal(id){document.getElementById(id).classList.add('hidden');}
+
+// ================================================================
+// VAULT MANAGER
+// ================================================================
+
+// Populate vault asset select dropdown
+function populateVaultSelect(){
+  var sel=document.getElementById('vaultAssetSelect');
+  if(!sel)return;
+  sel.innerHTML='<option value="">-- Select Asset --</option>'+
+    AD.map(function(a){return'<option value="'+a.id+'">'+a.title+' ('+a.format+')</option>';}).join('');
+}
+
+// Show a file has been chosen
+function vaultFileChosen(input){
+  var f=input.files[0];
+  if(!f)return;
+  document.getElementById('vaultDropZone').innerHTML=
+    '<div class="text-3xl mb-2">📄</div><p class="text-green-400 font-semibold">'+f.name+'</p><p class="text-gray-400 text-xs mt-1">'+fmtBytes(f.size)+' — ready to encrypt</p>';
+}
+
+// Drag & drop into vault
+function vaultDropFile(e){
+  e.preventDefault();
+  var dz=document.getElementById('vaultDropZone');
+  dz.classList.remove('dragover');
+  var f=e.dataTransfer.files[0];
+  if(!f)return;
+  var fi=document.getElementById('vaultFileInput');
+  var dt=new DataTransfer(); dt.items.add(f); fi.files=dt.files;
+  vaultFileChosen(fi);
+}
+
+// Encrypt & store the selected file
+async function vaultUploadFile(){
+  var assetId=parseInt(document.getElementById('vaultAssetSelect').value);
+  var fi=document.getElementById('vaultFileInput');
+  if(!assetId||!fi.files[0]){toast('⚠️ Select an asset and a file first.','warning');return;}
+  if(!window.VAULT){toast('❌ Vault engine not loaded.','error');return;}
+
+  var file=fi.files[0];
+  // Show progress (simulated — crypto is near-instant for small files)
+  var prog=document.getElementById('vaultUploadProgress');
+  var bar=document.getElementById('vaultProgressBar');
+  var pct=document.getElementById('vaultProgressPct');
+  var nm=document.getElementById('vaultProgressName');
+  prog.classList.remove('hidden');
+  nm.textContent='Encrypting "'+file.name+'"…';
+  bar.style.width='30%'; pct.textContent='30%';
+  setTimeout(function(){bar.style.width='70%';pct.textContent='70%';},200);
+
+  var result=await VAULT.store(assetId,file);
+
+  bar.style.width='100%'; pct.textContent='100%';
+
+  if(result.ok){
+    // Mark asset as using vault (downloadUrl = __local__)
+    var asset=AD.find(function(a){return a.id===assetId;});
+    if(asset){asset.downloadUrl='__local__';save();}
+    toast('✅ "'+file.name+'" encrypted & stored! Asset download now uses vault.','ok');
+    setTimeout(function(){prog.classList.add('hidden');bar.style.width='0%';},1500);
+    refreshVaultList();
+  } else {
+    toast('❌ Vault store failed: '+result.error,'error');
+    prog.classList.add('hidden');
+  }
+}
+
+// Refresh the vault file list UI
+async function refreshVaultList(){
+  if(!window.VAULT){document.getElementById('vaultFileList').innerHTML='<p class="text-red-400 text-sm text-center py-6">Vault engine not loaded. Check assets/vault.js</p>';return;}
+  var records=await VAULT.list();
+  var vaultEl=document.getElementById('vaultFileList');
+  var badge=document.getElementById('vaultBadge');
+  if(badge)badge.textContent=records.length;
+  document.getElementById('vs-count').textContent=records.length;
+
+  // Compute total stored size from meta.size
+  var totalBytes=records.reduce(function(s,r){return s+(r.meta&&r.meta.size?r.meta.size:0);},0);
+  document.getElementById('vs-size').textContent=fmtBytes(totalBytes);
+
+  // Linked = assetId matches an existing asset with downloadUrl='__local__'
+  var linked=records.filter(function(r){return AD.find(function(a){return a.id===r.assetId&&a.downloadUrl==='__local__';});});
+  document.getElementById('vs-linked').textContent=linked.length;
+  document.getElementById('vs-unlinked').textContent=records.length-linked.length;
+
+  if(records.length===0){
+    vaultEl.innerHTML='<div class="text-center py-12"><div class="text-5xl mb-3">🔒</div><p class="text-gray-400 text-sm">No files in vault yet. Upload your first asset above!</p></div>';
+    return;
+  }
+
+  vaultEl.innerHTML='<div class="overflow-x-auto"><table class="data-table w-full"><thead><tr><th>Asset</th><th>File Name</th><th>Type</th><th>Size</th><th>Stored At</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+
+  records.map(function(r){
+    var asset=AD.find(function(a){return a.id===r.assetId;});
+    var isLinked=asset&&asset.downloadUrl==='__local__';
+    return'<tr>'+
+      '<td><div class="flex items-center gap-2">'+(asset?'<img src="'+asset.thumb+'" class="w-9 h-9 rounded-lg object-cover"/><span class="truncate max-w-32 text-sm">'+(asset.title||'Deleted')+'</span>':'<span class="text-red-400 text-xs">Asset deleted</span>')+'</div></td>'+
+      '<td class="text-gray-300 text-sm font-mono truncate max-w-36">'+(r.meta&&r.meta.name?r.meta.name:'—')+'</td>'+
+      '<td><span class="badge badge-blue text-xs">'+(r.meta&&r.meta.type?r.meta.type.split('/').pop().toUpperCase():'?')+'</span></td>'+
+      '<td class="text-gray-400 text-xs">'+(r.meta&&r.meta.size?fmtBytes(r.meta.size):'—')+'</td>'+
+      '<td class="text-gray-400 text-xs">'+(r.meta&&r.meta.storedAt?new Date(r.meta.storedAt).toLocaleDateString('en-IN'):'—')+'</td>'+
+      '<td>'+(isLinked?'<span class="badge badge-green">🔗 Linked</span>':'<span class="badge badge-yellow">⚠ Unlinked</span>')+'</td>'+
+      '<td><div class="flex gap-1">'+
+        '<button onclick="vaultTestDownload('+r.assetId+',\''+(r.meta&&r.meta.name?r.meta.name:'asset')+'\')" class="btn btn-success btn-sm text-xs">⬇ Test</button>'+
+        '<button onclick="vaultDeleteFile('+r.assetId+')" class="btn btn-danger btn-sm text-xs">🗑</button>'+
+      '</div></td>'+
+    '</tr>';
+  }).join('')+
+  '</tbody></table></div>';
+}
+
+// Test decrypt + download a vault file
+async function vaultTestDownload(assetId,filename){
+  if(!window.VAULT)return;
+  toast('🔓 Decrypting and downloading…','ok');
+  var res=await VAULT.download(assetId,filename);
+  if(!res.ok)toast('❌ '+res.error,'error');
+}
+
+// Delete a single vault file
+async function vaultDeleteFile(assetId){
+  if(!confirm('Remove this file from vault? The asset download URL will be cleared too.'))return;
+  await VAULT.remove(assetId);
+  // Reset asset downloadUrl
+  var asset=AD.find(function(a){return a.id===assetId;});
+  if(asset){asset.downloadUrl='#';save();}
+  toast('🗑 File removed from vault.','ok');
+  refreshVaultList();
+}
+
+// Export entire vault as encrypted JSON backup
+async function vaultExportBackup(){
+  if(!window.VAULT){toast('❌ Vault not loaded','error');return;}
+  var res=await VAULT.exportVault();
+  if(res.ok)toast('💾 Vault backup exported! ('+res.count+' files)','ok');
+  else toast('❌ Export failed: '+res.error,'error');
+}
+
+// Import a vault backup JSON
+async function vaultImportBackup(input){
+  var f=input.files[0]; if(!f)return;
+  if(!window.VAULT){toast('❌ Vault not loaded','error');return;}
+  toast('⏳ Importing vault backup…','ok');
+  var res=await VAULT.importVault(f);
+  if(res.ok){toast('✅ Imported '+res.count+' encrypted files!','ok');refreshVaultList();}
+  else toast('❌ Import failed: '+res.error,'error');
+  input.value='';
+}
+
+// Wipe entire vault
+async function vaultWipe(){
+  if(!confirm('⚠️ Wipe ALL encrypted files from vault? This cannot be undone!'))return;
+  await VAULT.wipe();
+  // Reset all __local__ asset URLs
+  AD.forEach(function(a){if(a.downloadUrl==='__local__')a.downloadUrl='#';});
+  save();
+  toast('🗑 Vault wiped.','ok');
+  refreshVaultList();
+}
+
+// ================================================================
+// LOGOUT
+// ================================================================
+function adminLogout(){
+  if(!confirm('Log out?'))return;
+  localStorage.removeItem('adminAuth');localStorage.removeItem('adminAuthExpiry');
+  window.location.href='login.html';
+}
+
+// ================================================================
+// UTILS
+// ================================================================
+function fmtNum(n){if(!n&&n!==0)return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n);}
+function fmtBytes(b){if(b>=1e6)return(b/1e6).toFixed(1)+'MB';if(b>=1e3)return(b/1e3).toFixed(0)+'KB';return b+'B';}
+function escStr(s){return(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function toast(msg,type='ok'){
+  const w=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className='toast-item '+(type==='ok'?'ok':type==='err'?'err':'warn');
+  const icons={ok:'✅',err:'❌',warn:'⚠️'};
+  t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span class="flex-1">${msg}</span>`;
+  w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(16px)';t.style.transition='all .3s ease';setTimeout(()=>t.remove(),300);},3500);
+}
+</script>
+</body>
+</html>
+
+<hr class="my-8 border-zinc-700">
+<div class="bg-zinc-900 p-6 rounded-2xl mt-8">
+<h2 class="text-2xl font-bold mb-4">AI Wallpaper Vault</h2>
+<div id="wallpaperList"></div>
+</div>
+
+<script>
+const list = document.getElementById('wallpaperList');
+const wallpapers = JSON.parse(localStorage.getItem('ai_wallpapers') || '[]');
+
+if (wallpapers.length === 0) {
+  list.innerHTML = "<p>No wallpapers generated yet.</p>";
+} else {
+  list.innerHTML = wallpapers.map(w => `
+    <div style="padding:15px;border:1px solid #333;border-radius:12px;margin-bottom:12px;">
+      <img src="${w.imageUrl}" style="width:220px;border-radius:12px;margin-bottom:10px;">
+      <p>${w.prompt}</p>
+      <a href="${w.imageUrl}" target="_blank">Open Wallpaper</a>
+    </div>
+  `).join('');
+}
+</script>
