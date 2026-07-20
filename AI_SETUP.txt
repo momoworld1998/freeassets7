@@ -1,0 +1,28 @@
+
+# FreeAssetsHub AI Edition
+
+## Features Added
+- Gemini AI Wallpaper Generator
+- Admin Wallpaper Vault
+- Auto Save Generated Wallpapers
+- Mobile + Desktop Support
+
+## IMPORTANT SECURITY
+Do NOT hardcode your Gemini API key publicly.
+
+## Recommended Secure Setup
+1. Open js/gemini-ai.js
+2. Replace:
+   Replace_With_Encrypted_Key
+
+3. Better option:
+Store API key inside:
+localStorage.setItem("gemini_api_key","YOUR_KEY")
+
+## Deploy
+- Upload to GitHub
+- Connect with Vercel or Netlify
+- Works fully static
+
+## AI Page
+ai-wallpaper.html

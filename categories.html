@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Categories – FreeAssetsHub | Free Digital Assets</title>
+  <meta name="description" content="Browse all 20 categories of free digital assets — Instagram templates, wallpapers, music, GIFs, invitation cards, stickers, and more. No login required!" />
+  <meta name="keywords" content="free digital assets categories, instagram templates, wallpapers, free music, gif cards, stickers, invitation cards, meme templates" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="All Categories – FreeAssetsHub" />
+  <meta property="og:description" content="Browse 10,000+ free digital assets across 20 categories. No signup needed!" />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- Google AdSense — Replace with your Publisher ID -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { display: ['Syne', 'sans-serif'], body: ['DM Sans', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#f5f3ff', 100:'#ede9fe', 500:'#8b5cf6', 600:'#7c3aed', 700:'#6d28d9', 900:'#2e1065' },
+            accent: { 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Extra styles for categories page */
+    .cat-hero-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .cat-hero-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.18); }
+    .cat-hero-card .cat-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 16px 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+    }
+
+    /* Asset card grid */
+    .assets-masonry { columns: 2; column-gap: 14px; }
+    @media(min-width:640px){ .assets-masonry { columns: 3; } }
+    @media(min-width:768px){ .assets-masonry { columns: 4; } }
+    @media(min-width:1024px){ .assets-masonry { columns: 5; } }
+
+    .asset-item {
+      break-inside: avoid;
+      margin-bottom: 14px;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      background: #f3f4f6;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .dark .asset-item { background: #1f2937; }
+    .asset-item:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.14); }
+    .asset-item img { width: 100%; display: block; min-height: 100px; object-fit: cover; }
+    .asset-item .item-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%);
+      opacity: 0; transition: opacity 0.2s;
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 10px;
+    }
+    .asset-item:hover .item-overlay { opacity: 1; }
+    .asset-item .item-meta { padding: 8px 10px; }
+
+    /* Filter pill active */
+    .pill.active {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
+      color: white !important;
+      border-color: transparent !important;
+    }
+
+    /* Category sidebar item active */
+    .cat-sidebar-item.active {
+      background: linear-gradient(135deg, #7c3aed22, #3b82f622);
+      border-left: 3px solid #7c3aed;
+      color: #7c3aed;
+      font-weight: 600;
+    }
+    .dark .cat-sidebar-item.active { color: #a78bfa; }
+
+    /* Sort select */
+    select.sort-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+      padding-right: 32px; appearance: none;
+    }
+
+    /* Skeleton loader */
+    .skel { border-radius: 12px; animation: shimmer 1.5s infinite; }
+    .skel-light { background: linear-gradient(90deg,#e5e7eb 25%,#d1d5db 50%,#e5e7eb 75%); background-size:200% 100%; }
+    .skel-dark  { background: linear-gradient(90deg,#374151 25%,#4b5563 50%,#374151 75%); background-size:200% 100%; }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+
+    /* No results */
+    .no-results { text-align:center; padding: 60px 20px; }
+  </style>
+</head>
+
+<body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-body transition-colors duration-300">
+
+<!-- ===== STICKY NAVBAR ===== -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <!-- Logo -->
+    <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+        <span class="text-white font-display font-bold text-sm">FA</span>
+      </div>
+      <span class="font-display font-bold text-lg text-gray-900 dark:text-white">Free<span class="text-brand-500">Assets</span>Hub</span>
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">Home</a>
+      <a href="categories.html" class="text-brand-600 dark:text-brand-400 font-semibold">Categories</a>
+      <a href="about.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">About</a>
+      <a href="contact.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">Contact</a>
+    </div>
+
+    <!-- Right: search + theme + mobile -->
+    <div class="flex items-center gap-2">
+      <!-- Inline search (desktop) -->
+      <div class="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1.5">
+        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+        <input id="navSearch" type="text" placeholder="Search assets…" class="bg-transparent outline-none text-sm w-36 text-gray-700 dark:text-gray-200 placeholder-gray-400" />
+      </div>
+      <button id="themeToggle" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle theme">
+        <i data-lucide="sun" class="w-4 h-4 dark:hidden text-gray-600"></i>
+        <i data-lucide="moon" class="w-4 h-4 hidden dark:block text-gray-300"></i>
+      </button>
+      <button id="mobileMenuBtn" class="md:hidden w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center" aria-label="Menu">
+        <i data-lucide="menu" class="w-4 h-4 text-gray-600 dark:text-gray-300"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 px-4 py-4 space-y-3 text-sm font-medium">
+    <div class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-xl px-3 py-2 mb-3">
+      <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+      <input id="mobileSearch" type="text" placeholder="Search assets…" class="bg-transparent outline-none text-sm flex-1 text-gray-700 dark:text-gray-200 placeholder-gray-400" />
+    </div>
+    <a href="index.html" class="block text-gray-700 dark:text-gray-300">Home</a>
+    <a href="categories.html" class="block text-brand-600 dark:text-brand-400">Categories</a>
+    <a href="about.html" class="block text-gray-700 dark:text-gray-300">About</a>
+    <a href="contact.html" class="block text-gray-700 dark:text-gray-300">Contact</a>
+    <a href="privacy.html" class="block text-gray-700 dark:text-gray-300">Privacy Policy</a>
+    <a href="terms.html" class="block text-gray-700 dark:text-gray-300">Terms</a>
+  </div>
+</nav>
+
+<!-- ===== HEADER AD ===== -->
+<div class="mt-16 flex justify-center bg-gray-50 dark:bg-gray-900 py-2">
+  <ins class="adsbygoogle" style="display:block;width:728px;max-width:100%;height:90px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111" data-ad-format="horizontal"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== HERO SECTION ===== -->
+<section class="relative bg-gradient-to-br from-brand-900 via-brand-700 to-accent-600 pt-12 pb-10 overflow-hidden">
+  <div class="absolute inset-0 opacity-10" style="background-image:radial-gradient(circle at 25% 40%, white 1px, transparent 1px);background-size:36px 36px;"></div>
+  <div class="absolute top-0 right-0 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+  <div class="relative max-w-7xl mx-auto px-4 text-center">
+    <h1 class="cat-page-title font-display font-extrabold text-3xl md:text-5xl text-white mb-3">
+      Browse All Categories
+    </h1>
+    <p class="cat-page-subtitle text-white/70 text-base md:text-lg mb-8 max-w-xl mx-auto">
+      10,000+ copyright-free digital assets across 20 categories. Download free — no login required!
+    </p>
+
+    <!-- Hero Search Bar -->
+    <div class="relative max-w-xl mx-auto">
+      <div class="flex bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden">
+        <div class="flex-1 flex items-center px-4 gap-2">
+          <i data-lucide="search" class="w-5 h-5 text-gray-400 flex-shrink-0"></i>
+          <input id="heroSearchCat" type="text" placeholder="Search wallpapers, music, templates…" class="flex-1 bg-transparent py-3.5 text-gray-800 dark:text-white outline-none text-sm placeholder-gray-400" />
+        </div>
+        <button onclick="doHeroSearch()" class="bg-gradient-to-r from-brand-600 to-accent-500 text-white px-5 py-3.5 font-semibold text-sm hover:opacity-90 transition-opacity">Search</button>
+      </div>
+      <!-- Hero search suggestions -->
+      <div id="heroSuggestions" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-800 z-50 overflow-hidden text-left"></div>
+    </div>
+
+    <!-- Quick stat pills -->
+    <div class="flex flex-wrap justify-center gap-3 mt-7">
+      <span class="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs px-3 py-1.5 rounded-full">📦 20 Categories</span>
+      <span class="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs px-3 py-1.5 rounded-full">🎨 10,000+ Assets</span>
+      <span class="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs px-3 py-1.5 rounded-full">⬇️ 500K+ Downloads</span>
+      <span class="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs px-3 py-1.5 rounded-full">🆓 100% Free</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ALL CATEGORIES SHOWCASE ===== -->
+<section data-cat-section="catgrid" class="max-w-7xl mx-auto px-4 py-12">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="font-display font-bold text-2xl md:text-3xl text-gray-900 dark:text-white">All Categories</h2>
+    <span id="totalCatCount" class="text-gray-400 text-sm">20 categories</span>
+  </div>
+
+  <!-- Category Hero Grid -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="allCategoriesGrid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- ===== IN-CONTENT AD ===== -->
+<div class="flex justify-center py-4 bg-gray-50 dark:bg-gray-900/50 my-2">
+  <ins class="adsbygoogle" style="display:block;width:728px;max-width:100%;height:90px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="6666666666" data-ad-format="horizontal"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== ASSETS BROWSER ===== -->
+<section data-cat-section="browser" class="max-w-7xl mx-auto px-4 py-8">
+  <!-- Section heading with active category -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div>
+      <h2 id="browseHeading" class="font-display font-bold text-2xl text-gray-900 dark:text-white">
+        Browse Assets
+      </h2>
+      <p id="browseSubheading" class="text-gray-400 text-sm mt-0.5">Showing all assets</p>
+    </div>
+    <!-- Sort + View controls -->
+    <div class="flex items-center gap-3 flex-shrink-0">
+      <select id="sortSelect" onchange="applySortFilter()" class="sort-select bg-gray-100 dark:bg-gray-800 border-0 text-gray-700 dark:text-gray-300 text-sm rounded-xl px-3 py-2 outline-none cursor-pointer">
+        <option value="default">Sort: Default</option>
+        <option value="trending">🔥 Trending</option>
+        <option value="new">✨ Newest</option>
+        <option value="downloads">⬇ Most Downloaded</option>
+        <option value="likes">❤ Most Liked</option>
+      </select>
+      <!-- View toggle -->
+      <div class="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1 gap-1">
+        <button id="viewMasonry" onclick="setView('masonry')" class="w-8 h-8 rounded-lg bg-white dark:bg-gray-700 flex items-center justify-center shadow-sm" title="Masonry view">
+          <i data-lucide="layout-grid" class="w-4 h-4 text-brand-600"></i>
+        </button>
+        <button id="viewList" onclick="setView('list')" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 transition-colors" title="List view">
+          <i data-lucide="list" class="w-4 h-4 text-gray-400"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-6">
+    <!-- ===== LEFT SIDEBAR ===== -->
+    <aside class="hidden lg:block w-56 flex-shrink-0">
+      <div class="sticky top-20 space-y-1">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-3">Filter by Category</p>
+        <button onclick="selectCategory('all')" id="sidebar-all" class="cat-sidebar-item active w-full text-left px-3 py-2.5 rounded-xl text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-between">
+          <span>🗂 All Assets</span>
+          <span class="text-xs text-gray-400">24</span>
+        </button>
+        <div id="sidebarCategories"></div>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="flex-1 min-w-0">
+      <!-- Filter Pills (horizontal scroll) -->
+      <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-3 mb-5">
+        <button onclick="selectTag('all')" id="tag-all" class="pill active whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent transition-all flex-shrink-0">All</button>
+        <button onclick="selectTag('trending')" id="tag-trending" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-brand-300 transition-all flex-shrink-0">🔥 Trending</button>
+        <button onclick="selectTag('new')" id="tag-new" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-brand-300 transition-all flex-shrink-0">✨ New</button>
+        <button onclick="selectTag('hd')" id="tag-hd" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-brand-300 transition-all flex-shrink-0">🖥 HD Quality</button>
+        <button onclick="selectTag('animated')" id="tag-animated" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-brand-300 transition-all flex-shrink-0">🎬 Animated</button>
+        <button onclick="selectTag('free')" id="tag-free" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-brand-300 transition-all flex-shrink-0">🆓 Free</button>
+        <!-- Format filters -->
+        <div class="w-px h-4 bg-gray-200 dark:bg-gray-700 flex-shrink-0 mx-1"></div>
+        <button onclick="selectFormat('PNG')" id="fmt-PNG" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-blue-300 transition-all flex-shrink-0">PNG</button>
+        <button onclick="selectFormat('JPG')" id="fmt-JPG" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-green-300 transition-all flex-shrink-0">JPG</button>
+        <button onclick="selectFormat('GIF')" id="fmt-GIF" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-yellow-300 transition-all flex-shrink-0">GIF</button>
+        <button onclick="selectFormat('MP4')" id="fmt-MP4" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-red-300 transition-all flex-shrink-0">MP4</button>
+        <button onclick="selectFormat('MP3')" id="fmt-MP3" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-purple-300 transition-all flex-shrink-0">MP3</button>
+        <button onclick="selectFormat('PSD')" id="fmt-PSD" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-orange-300 transition-all flex-shrink-0">PSD</button>
+        <button onclick="selectFormat('ZIP')" id="fmt-ZIP" class="pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-transparent hover:border-gray-400 transition-all flex-shrink-0">ZIP</button>
+      </div>
+
+      <!-- Results count -->
+      <div class="flex items-center justify-between mb-4">
+        <p id="resultsCount" class="text-sm text-gray-400"></p>
+        <button id="clearFiltersBtn" onclick="clearAllFilters()" class="hidden text-xs text-brand-600 dark:text-brand-400 hover:underline font-medium flex items-center gap-1">
+          <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Clear filters
+        </button>
+      </div>
+
+      <!-- Assets Grid -->
+      <div id="assetsContainer" class="assets-masonry"></div>
+
+      <!-- No results -->
+      <div id="noResults" class="hidden no-results">
+        <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">🔍</div>
+        <h3 class="font-display font-bold text-xl text-gray-800 dark:text-gray-200 mb-2">No assets found</h3>
+        <p class="text-gray-400 text-sm mb-6">Try a different keyword, category, or clear filters.</p>
+        <button onclick="clearAllFilters()" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">Clear Filters</button>
+      </div>
+
+      <!-- Load More -->
+      <div id="loadMoreContainer" class="text-center mt-8 hidden">
+        <button onclick="loadMoreAssets()" id="loadMoreBtn" class="bg-gradient-to-r from-brand-600 to-accent-500 text-white px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-lg flex items-center gap-2 mx-auto">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i> Load More Assets
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT SIDEBAR AD ===== -->
+    <aside class="hidden xl:block w-40 flex-shrink-0">
+      <div class="sticky top-20">
+        <ins class="adsbygoogle" style="display:block;width:160px;height:600px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="vertical"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ===== CATEGORY SPOTLIGHT CARDS ===== -->
+<section data-cat-section="spotlight" class="bg-gray-50 dark:bg-gray-900/60 py-14">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-8">
+      <h2 class="font-display font-bold text-2xl md:text-3xl text-gray-900 dark:text-white">🌟 Category Spotlights</h2>
+      <p class="text-gray-400 text-sm mt-2">Top picks from our most popular categories</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 overflow-x-auto scrollbar-hide justify-center pb-3 mb-8">
+      <button onclick="showSpotlight('wallpapers')" id="spot-wallpapers" class="spotlight-tab active-spot whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-brand-600 text-white transition-all">🖼 Wallpapers</button>
+      <button onclick="showSpotlight('instagram')" id="spot-instagram" class="spotlight-tab whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-all">📸 Instagram</button>
+      <button onclick="showSpotlight('wedding')" id="spot-wedding" class="spotlight-tab whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-all">💍 Wedding</button>
+      <button onclick="showSpotlight('memes')" id="spot-memes" class="spotlight-tab whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-all">😂 Memes</button>
+      <button onclick="showSpotlight('music')" id="spot-music" class="spotlight-tab whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-all">🎵 Music</button>
+    </div>
+
+    <!-- Spotlight grid -->
+    <div id="spotlightGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3"></div>
+  </div>
+</section>
+
+<!-- ===== TRENDING SEARCHES ===== -->
+<section data-cat-section="trendsearch" class="max-w-7xl mx-auto px-4 py-10">
+  <div class="flex flex-col md:flex-row gap-8 items-start">
+    <div class="flex-1">
+      <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <span class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">🔥</span> Trending Searches
+      </h3>
+      <div class="flex flex-wrap gap-2" id="trendingTags"></div>
+    </div>
+    <div class="flex-1">
+      <h3 class="font-display font-bold text-lg text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <span>📊</span> Top Downloaded
+      </h3>
+      <div class="space-y-3" id="topDownloadedList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BOTTOM AD ===== -->
+<div class="flex justify-center py-4 bg-gray-50 dark:bg-gray-900/50">
+  <ins class="adsbygoogle" style="display:block;width:728px;max-width:100%;height:90px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="7777777777" data-ad-format="horizontal"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="bg-gray-950 text-gray-400 pt-14 pb-6">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center"><span class="text-white font-display font-bold text-sm">FA</span></div>
+          <span class="font-display font-bold text-white">FreeAssetsHub</span>
+        </div>
+        <p class="text-xs leading-relaxed">Your one-stop destination for free copyright-free digital assets.</p>
+        <div class="flex gap-3 mt-4">
+          <a href="https://wa.me/918817644730" target="_blank" class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-500 transition-colors"><i data-lucide="message-circle" class="w-3.5 h-3.5 text-white"></i></a>
+          <a href="https://t.me/freeassetshub" target="_blank" class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors"><i data-lucide="send" class="w-3.5 h-3.5 text-white"></i></a>
+          <a href="mailto:croma.laxmielectronics@gmail.com" class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-400 transition-colors"><i data-lucide="mail" class="w-3.5 h-3.5 text-white"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-display font-semibold text-white mb-3 text-sm">Top Categories</h4>
+        <ul class="space-y-1.5 text-xs">
+          <li><a href="?cat=wallpapers" class="hover:text-brand-400 transition-colors">🖼 Wallpapers</a></li>
+          <li><a href="?cat=instagram" class="hover:text-brand-400 transition-colors">📸 Instagram</a></li>
+          <li><a href="?cat=music" class="hover:text-brand-400 transition-colors">🎵 Free Music</a></li>
+          <li><a href="?cat=invitations" class="hover:text-brand-400 transition-colors">💌 Invitations</a></li>
+          <li><a href="?cat=gifs" class="hover:text-brand-400 transition-colors">🎞 GIFs</a></li>
+          <li><a href="?cat=memes" class="hover:text-brand-400 transition-colors">😂 Memes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display font-semibold text-white mb-3 text-sm">Company</h4>
+        <ul class="space-y-1.5 text-xs">
+          <li><a href="about.html" class="hover:text-brand-400 transition-colors">About Us</a></li>
+          <li><a href="contact.html" class="hover:text-brand-400 transition-colors">Contact Us</a></li>
+          <li><a href="privacy.html" class="hover:text-brand-400 transition-colors">Privacy Policy</a></li>
+          <li><a href="terms.html" class="hover:text-brand-400 transition-colors">Terms & Conditions</a></li>
+          <li><a href="dmca.html" class="hover:text-brand-400 transition-colors">DMCA</a></li>
+          <li><a href="admin/login.html" class="hover:text-brand-400 transition-colors">Admin Panel</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display font-semibold text-white mb-3 text-sm">Contact</h4>
+        <ul class="space-y-2 text-xs">
+          <li class="flex items-center gap-2"><i data-lucide="phone" class="w-3.5 h-3.5 text-brand-400"></i><a href="tel:+918817644730" class="hover:text-brand-400">+91 88176 44730</a></li>
+          <li class="flex items-start gap-2"><i data-lucide="mail" class="w-3.5 h-3.5 text-brand-400 mt-0.5"></i><a href="mailto:croma.laxmielectronics@gmail.com" class="hover:text-brand-400 break-all">croma.laxmielectronics@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 pt-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-gray-600">
+      <p>© 2025 FreeAssetsHub. All Rights Reserved.</p>
+      <p>Made with ❤️ for creators</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== STICKY MOBILE AD ===== -->
+<div id="stickyMobileAd" class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-center py-1">
+  <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="4444444444" data-ad-format="mobile-banner"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  <button onclick="document.getElementById('stickyMobileAd').style.display='none'" class="absolute right-2 top-1 text-gray-400 text-xs">✕</button>
+</div>
+
+<!-- ===== DOWNLOAD MODAL ===== -->
+<div id="downloadModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDownloadModal()"></div>
+  <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-gray-800" style="animation:modalIn .3s ease">
+    <button onclick="closeDownloadModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+
+    <div class="text-center mb-5">
+      <div class="w-14 h-14 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl" id="modalEmoji">⬇️</div>
+      <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-1">Free Download</h3>
+      <p class="text-gray-400 text-sm" id="modalAssetTitle">Watch a short ad to unlock your download</p>
+    </div>
+
+    <!-- Ad in modal -->
+    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-3 mb-4 min-h-[90px] flex items-center justify-center">
+      <ins class="adsbygoogle" style="display:inline-block;width:300px;height:100px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="5555555555"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- Countdown -->
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm text-gray-500 dark:text-gray-400">Unlocking download in:</span>
+      <span id="countdownNum" class="font-display font-bold text-2xl text-brand-600 dark:text-brand-400">5</span>
+    </div>
+    <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-5 overflow-hidden">
+      <div id="countdownBar" class="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000" style="width:0%"></div>
+    </div>
+
+    <!-- Asset meta -->
+    <div id="modalMeta" class="flex items-center gap-3 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl hidden">
+      <img id="modalThumb" src="" alt="" class="w-12 h-12 rounded-lg object-cover" />
+      <div>
+        <p id="modalTitle" class="text-sm font-semibold text-gray-800 dark:text-gray-200"></p>
+        <p id="modalFormat" class="text-xs text-gray-400"></p>
+      </div>
+    </div>
+
+    <button id="dlNowBtn" onclick="startActualDownload()" disabled
+      class="w-full bg-gradient-to-r from-brand-600 to-accent-500 text-white py-3 rounded-xl font-semibold opacity-50 cursor-not-allowed transition-all mb-3 flex items-center justify-center gap-2">
+      <i data-lucide="download" class="w-4 h-4"></i> Download Now — Free!
+    </button>
+
+    <div class="flex gap-3">
+      <button onclick="shareWhatsApp()" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2">
+        <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+      </button>
+      <button onclick="shareTelegram()" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2">
+        <i data-lucide="send" class="w-4 h-4"></i> Telegram
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PREVIEW MODAL ===== -->
+<div id="previewModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closePreview()"></div>
+  <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-gray-800" style="animation:modalIn .3s ease">
+    <button onclick="closePreview()" class="absolute top-3 right-3 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+    <!-- Watermark overlay -->
+    <div class="relative bg-gray-100 dark:bg-gray-800">
+      <img id="pvImg" src="" alt="Preview" class="w-full max-h-80 object-contain" />
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-25">
+        <div class="text-white font-display font-bold text-2xl rotate-[-20deg] whitespace-nowrap">FreeAssetsHub</div>
+      </div>
+    </div>
+    <div class="p-5">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h3 id="pvTitle" class="font-display font-bold text-lg text-gray-900 dark:text-white"></h3>
+          <div class="flex items-center gap-3 mt-1 text-xs text-gray-400">
+            <span id="pvCat" class="bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2 py-0.5 rounded-full font-medium capitalize"></span>
+            <span id="pvDl"></span>
+            <span id="pvLikes"></span>
+          </div>
+        </div>
+        <span id="pvFmt" class="flex-shrink-0 px-2 py-1 rounded-lg text-xs font-bold text-white"></span>
+      </div>
+      <div class="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-gray-800">
+        <button id="pvDownloadBtn" onclick="downloadFromPreview()" class="flex-1 bg-gradient-to-r from-brand-600 to-accent-500 text-white py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+          <i data-lucide="download" class="w-4 h-4"></i> Free Download
+        </button>
+        <button onclick="likeCurrentAsset()" id="pvLikeBtn" class="w-10 h-10 bg-red-50 dark:bg-red-900/20 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
+          <i data-lucide="heart" class="w-5 h-5"></i>
+        </button>
+        <button onclick="shareCurrentAsset()" class="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 text-blue-400 rounded-xl flex items-center justify-center hover:bg-blue-100 transition-colors">
+          <i data-lucide="share-2" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>@keyframes modalIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}</style>
+
+<!-- Scripts -->
+<script src="assets/vault.js"></script>
+<script src="js/data.js"></script>
+<script src="js/site-sync.js"></script>
+<script>
+// ============================================================
+// categories.js — inline script for categories.html
+// ============================================================
+
+// ---- State ----
+let activeCat     = 'all';  // category filter
+let activeTag     = 'all';  // tag filter (trending/new/hd/animated/free)
+let activeFormat  = null;   // format filter (PNG/JPG/GIF…)
+let activeSort    = 'default';
+let activeView    = 'masonry';
+let currentPage   = 0;
+const PAGE_SIZE   = 20;
+let currentPreviewAsset = null;
+let pendingDownload     = null;
+let dlTimer             = null;
+
+// ---- INIT ----
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  initTheme();
+  setupNavbarMobile();
+  buildAllCategoriesGrid();
+  buildSidebarCategories();
+  renderAssets();
+  buildTrendingTags();
+  buildTopDownloaded();
+  showSpotlight('wallpapers');
+  readURLParams();
+  setupSearches();
+});
+
+// ---- THEME ----
+function initTheme() {
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+  document.getElementById('themeToggle')?.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    lucide.createIcons();
+  });
+}
+
+// ---- MOBILE NAVBAR ----
+function setupNavbarMobile() {
+  document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+    document.getElementById('mobileMenu')?.classList.toggle('hidden');
+  });
+}
+
+// ---- READ ?cat= URL PARAM ----
+function readURLParams() {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  if (cat) selectCategory(cat);
+}
+
+// ---- BUILD ALL CATEGORIES HERO GRID ----
+function buildAllCategoriesGrid() {
+  const grid = document.getElementById('allCategoriesGrid');
+  if (!grid) return;
+  grid.innerHTML = CATEGORIES.map(cat => `
+    <button onclick="selectCategory('${cat.id}')" class="cat-hero-card group aspect-square bg-gradient-to-br ${cat.color} min-h-[110px]">
+      <div class="absolute inset-0 flex items-center justify-center text-4xl transition-transform duration-300 group-hover:scale-110">${cat.emoji}</div>
+      <div class="cat-label">
+        <p class="text-white font-display font-bold text-xs leading-tight">${cat.name}</p>
+        <p class="text-white/60 text-xs">${cat.count.toLocaleString()} assets</p>
+      </div>
+    </button>
+  `).join('');
+}
+
+// ---- BUILD SIDEBAR CATEGORIES ----
+function buildSidebarCategories() {
+  const el = document.getElementById('sidebarCategories');
+  if (!el) return;
+  el.innerHTML = CATEGORIES.map(cat => {
+    const count = ASSETS.filter(a => a.category === cat.id).length;
+    return `
+      <button onclick="selectCategory('${cat.id}')" id="sidebar-${cat.id}"
+        class="cat-sidebar-item w-full text-left px-3 py-2.5 rounded-xl text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-between">
+        <span>${cat.emoji} ${cat.name}</span>
+        <span class="text-xs text-gray-400">${count}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+// ---- SELECT CATEGORY ----
+function selectCategory(id) {
+  activeCat = id;
+  currentPage = 0;
+
+  // Sidebar highlight
+  document.querySelectorAll('.cat-sidebar-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('sidebar-' + (id === 'all' ? 'all' : id))?.classList.add('active');
+
+  // Update heading
+  if (id === 'all') {
+    document.getElementById('browseHeading').textContent = 'Browse All Assets';
+    document.getElementById('browseSubheading').textContent = 'Showing all categories';
+  } else {
+    const cat = CATEGORIES.find(c => c.id === id);
+    document.getElementById('browseHeading').textContent = (cat?.emoji || '') + ' ' + (cat?.name || id);
+    document.getElementById('browseSubheading').textContent = `${cat?.count?.toLocaleString() || 0} assets in this category`;
+  }
+
+  renderAssets();
+  // Scroll to browser section
+  document.getElementById('browseHeading').closest('section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Update URL without reload
+  const url = new URL(window.location);
+  id === 'all' ? url.searchParams.delete('cat') : url.searchParams.set('cat', id);
+  window.history.pushState({}, '', url);
+}
+
+// ---- SELECT TAG ----
+function selectTag(tag) {
+  activeTag = tag;
+  activeFormat = null;
+  currentPage = 0;
+  // Update pills
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('tag-' + tag)?.classList.add('active');
+  renderAssets();
+}
+
+// ---- SELECT FORMAT ----
+function selectFormat(fmt) {
+  activeFormat = activeFormat === fmt ? null : fmt;
+  activeTag = 'all';
+  currentPage = 0;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  if (activeFormat) document.getElementById('fmt-' + fmt)?.classList.add('active');
+  else document.getElementById('tag-all')?.classList.add('active');
+  renderAssets();
+}
+
+// ---- CLEAR ALL FILTERS ----
+function clearAllFilters() {
+  activeCat = 'all'; activeTag = 'all'; activeFormat = null; activeSort = 'default'; currentPage = 0;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('tag-all')?.classList.add('active');
+  document.querySelectorAll('.cat-sidebar-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('sidebar-all')?.classList.add('active');
+  document.getElementById('sortSelect').value = 'default';
+  document.getElementById('browseHeading').textContent = 'Browse All Assets';
+  document.getElementById('browseSubheading').textContent = 'Showing all assets';
+  renderAssets();
+  const url = new URL(window.location);
+  url.searchParams.delete('cat');
+  window.history.pushState({}, '', url);
+}
+
+// ---- SORT ----
+function applySortFilter() {
+  activeSort = document.getElementById('sortSelect').value;
+  currentPage = 0;
+  renderAssets();
+}
+
+// ---- SET VIEW ----
+function setView(type) {
+  activeView = type;
+  const container = document.getElementById('assetsContainer');
+  if (type === 'masonry') {
+    container.className = 'assets-masonry';
+    document.getElementById('viewMasonry').classList.add('bg-white','dark:bg-gray-700','shadow-sm');
+    document.getElementById('viewList').classList.remove('bg-white','dark:bg-gray-700','shadow-sm');
+  } else {
+    container.className = 'space-y-3';
+    document.getElementById('viewList').classList.add('bg-white','dark:bg-gray-700','shadow-sm');
+    document.getElementById('viewMasonry').classList.remove('bg-white','dark:bg-gray-700','shadow-sm');
+  }
+  renderAssets();
+}
+
+// ---- MAIN RENDER FUNCTION ----
+function renderAssets() {
+  let filtered = [...ASSETS];
+
+  // Category filter
+  if (activeCat !== 'all') filtered = filtered.filter(a => a.category === activeCat);
+
+  // Tag filter
+  if (activeTag !== 'all') filtered = filtered.filter(a => a.tags.includes(activeTag));
+
+  // Format filter
+  if (activeFormat) filtered = filtered.filter(a => a.format === activeFormat);
+
+  // Sort
+  if (activeSort === 'trending') filtered = filtered.filter(a => a.tags.includes('trending'));
+  else if (activeSort === 'new') filtered = filtered.filter(a => a.tags.includes('new'));
+  else if (activeSort === 'downloads') filtered.sort((a,b) => b.downloads - a.downloads);
+  else if (activeSort === 'likes') filtered.sort((a,b) => b.likes - a.likes);
+
+  // Pagination
+  const page = filtered.slice(0, (currentPage + 1) * PAGE_SIZE);
+  const hasMore = filtered.length > page.length;
+
+  // Results count
+  document.getElementById('resultsCount').textContent = `${filtered.length} asset${filtered.length !== 1 ? 's' : ''} found`;
+
+  // Clear filters btn
+  const hasFilters = activeCat !== 'all' || activeTag !== 'all' || activeFormat !== null || activeSort !== 'default';
+  document.getElementById('clearFiltersBtn').classList.toggle('hidden', !hasFilters);
+
+  const container = document.getElementById('assetsContainer');
+  const noResults = document.getElementById('noResults');
+  const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    noResults.classList.remove('hidden');
+    loadMoreContainer.classList.add('hidden');
+    return;
+  }
+  noResults.classList.add('hidden');
+
+  container.innerHTML = page.map(a => activeView === 'masonry' ? renderMasonryCard(a) : renderListCard(a)).join('');
+  loadMoreContainer.classList.toggle('hidden', !hasMore);
+  lucide.createIcons();
+  initLazyLoad();
+}
+
+// ---- MASONRY CARD ----
+const FMT_COLORS = {PNG:'bg-blue-500',JPG:'bg-green-500',GIF:'bg-yellow-500',MP4:'bg-red-500',MP3:'bg-purple-500',PSD:'bg-orange-500',ZIP:'bg-gray-600'};
+function renderMasonryCard(a) {
+  const fc = FMT_COLORS[a.format] || 'bg-gray-500';
+  return `
+    <div class="asset-item" onclick="openPreview(${a.id})">
+      <img data-src="${a.thumb}" alt="${a.title}" class="lazy-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="min-height:120px;" />
+      ${a.featured ? '<span class="absolute top-2 right-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-1.5 py-0.5 rounded-md">⭐</span>' : ''}
+      <div class="item-overlay">
+        <div class="flex items-center justify-between w-full">
+          <button onclick="event.stopPropagation();openDownload(${a.id})" class="bg-white text-gray-900 text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-brand-50 transition-colors flex items-center gap-1">
+            ⬇ Free
+          </button>
+          <span class="${fc} text-white text-xs font-bold px-2 py-0.5 rounded">${a.format}</span>
+        </div>
+      </div>
+      <div class="item-meta">
+        <p class="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">${a.title}</p>
+        <div class="flex items-center justify-between mt-0.5">
+          <p class="text-xs text-gray-400">${fmtNum(a.downloads)} dl</p>
+          <p class="text-xs text-red-400">❤ ${fmtNum(a.likes)}</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ---- LIST CARD ----
+function renderListCard(a) {
+  const fc = FMT_COLORS[a.format] || 'bg-gray-500';
+  return `
+    <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 hover:border-brand-200 dark:hover:border-brand-800 transition-colors cursor-pointer" onclick="openPreview(${a.id})">
+      <img data-src="${a.thumb}" alt="${a.title}" class="lazy-img w-16 h-16 rounded-xl object-cover flex-shrink-0" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-sm text-gray-800 dark:text-gray-200 truncate">${a.title}</p>
+        <div class="flex items-center gap-3 mt-1 text-xs text-gray-400">
+          <span class="capitalize">${a.category}</span>
+          <span>⬇ ${fmtNum(a.downloads)}</span>
+          <span>❤ ${fmtNum(a.likes)}</span>
+          <span class="${fc} text-white px-1.5 py-0.5 rounded font-bold">${a.format}</span>
+        </div>
+      </div>
+      <button onclick="event.stopPropagation();openDownload(${a.id})" class="flex-shrink-0 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors">
+        Free ⬇
+      </button>
+    </div>
+  `;
+}
+
+// ---- LOAD MORE ----
+function loadMoreAssets() {
+  currentPage++;
+  renderAssets();
+}
+
+// ---- SPOTLIGHT ----
+function showSpotlight(cat) {
+  document.querySelectorAll('.spotlight-tab').forEach(t => {
+    t.className = 'spotlight-tab whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-all';
+  });
+  const active = document.getElementById('spot-' + cat);
+  if (active) active.className = 'spotlight-tab active-spot whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-brand-600 text-white transition-all';
+
+  const assets = ASSETS.filter(a => a.category === cat).slice(0, 6);
+  const grid = document.getElementById('spotlightGrid');
+  if (!grid) return;
+  if (assets.length === 0) {
+    grid.innerHTML = '<p class="col-span-full text-center text-gray-400 text-sm py-8">No assets in this category yet.</p>';
+    return;
+  }
+  grid.innerHTML = assets.map(a => `
+    <div class="relative rounded-xl overflow-hidden cursor-pointer group" style="aspect-ratio:3/4;" onclick="openPreview(${a.id})">
+      <img data-src="${a.thumb}" alt="${a.title}" class="lazy-img w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
+        <button onclick="event.stopPropagation();openDownload(${a.id})" class="w-full bg-white text-gray-900 text-xs font-bold py-1.5 rounded-lg">⬇ Free</button>
+      </div>
+    </div>
+  `).join('');
+  initLazyLoad();
+  lucide.createIcons();
+}
+
+// ---- TRENDING TAGS ----
+function buildTrendingTags() {
+  const el = document.getElementById('trendingTags');
+  if (!el) return;
+  el.innerHTML = TRENDING_SEARCHES.map(s => `
+    <button onclick="searchByKeyword('${s}')" class="bg-gray-100 dark:bg-gray-800 hover:bg-brand-100 dark:hover:bg-brand-900/30 text-gray-700 dark:text-gray-300 hover:text-brand-700 dark:hover:text-brand-300 text-sm px-4 py-1.5 rounded-full transition-colors border border-transparent hover:border-brand-200">
+      🔍 ${s}
+    </button>
+  `).join('');
+}
+
+// ---- TOP DOWNLOADED LIST ----
+function buildTopDownloaded() {
+  const el = document.getElementById('topDownloadedList');
+  if (!el) return;
+  const top = [...ASSETS].sort((a,b) => b.downloads - a.downloads).slice(0,5);
+  el.innerHTML = top.map((a,i) => `
+    <button onclick="openPreview(${a.id})" class="flex items-center gap-3 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-900 p-2 rounded-xl transition-colors">
+      <span class="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-xs font-bold flex items-center justify-center flex-shrink-0">${i+1}</span>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">${a.title}</p>
+        <p class="text-xs text-gray-400">${fmtNum(a.downloads)} downloads</p>
+      </div>
+      <span class="text-xs text-brand-500 font-semibold">${a.format}</span>
+    </button>
+  `).join('');
+}
+
+// ---- SEARCH ----
+function setupSearches() {
+  ['navSearch', 'heroSearchCat', 'mobileSearch'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') searchByKeyword(el.value); });
+  });
+
+  const heroInput = document.getElementById('heroSearchCat');
+  const heroSug = document.getElementById('heroSuggestions');
+  if (heroInput && heroSug) {
+    heroInput.addEventListener('input', () => {
+      const q = heroInput.value.toLowerCase().trim();
+      if (!q) { heroSug.classList.add('hidden'); return; }
+      const matches = TRENDING_SEARCHES.filter(s => s.toLowerCase().includes(q)).slice(0,5);
+      if (!matches.length) { heroSug.classList.add('hidden'); return; }
+      heroSug.innerHTML = matches.map(s => `
+        <button onclick="searchByKeyword('${s}')" class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> ${s}
+        </button>
+      `).join('');
+      heroSug.classList.remove('hidden');
+    });
+    document.addEventListener('click', e => {
+      if (!heroInput.contains(e.target) && !heroSug.contains(e.target)) heroSug.classList.add('hidden');
+    });
+  }
+}
+
+function doHeroSearch() {
+  searchByKeyword(document.getElementById('heroSearchCat')?.value || '');
+  document.getElementById('heroSuggestions')?.classList.add('hidden');
+}
+
+function searchByKeyword(q) {
+  q = q.trim().toLowerCase();
+  if (!q) return;
+  activeCat = 'all'; activeTag = 'all'; activeFormat = null; currentPage = 0;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('tag-all')?.classList.add('active');
+
+  const results = ASSETS.filter(a =>
+    a.title.toLowerCase().includes(q) ||
+    a.category.includes(q) ||
+    a.tags.some(t => t.includes(q)) ||
+    a.format.toLowerCase().includes(q)
+  );
+
+  document.getElementById('browseHeading').textContent = `Search: "${q}"`;
+  document.getElementById('browseSubheading').textContent = `${results.length} result${results.length !== 1 ? 's' : ''} found`;
+  document.getElementById('clearFiltersBtn').classList.remove('hidden');
+
+  const container = document.getElementById('assetsContainer');
+  const noResults = document.getElementById('noResults');
+  const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+  if (results.length === 0) {
+    container.innerHTML = '';
+    noResults.classList.remove('hidden');
+    loadMoreContainer.classList.add('hidden');
+  } else {
+    noResults.classList.add('hidden');
+    container.innerHTML = results.map(a => activeView === 'masonry' ? renderMasonryCard(a) : renderListCard(a)).join('');
+    loadMoreContainer.classList.add('hidden');
+    lucide.createIcons();
+    initLazyLoad();
+  }
+  document.getElementById('browseHeading').closest('section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ---- PREVIEW MODAL ----
+function openPreview(id) {
+  const a = ASSETS.find(x => x.id === id);
+  if (!a) return;
+  currentPreviewAsset = a;
+  document.getElementById('pvImg').src = a.thumb;
+  document.getElementById('pvTitle').textContent = a.title;
+  document.getElementById('pvCat').textContent = a.category;
+  document.getElementById('pvDl').textContent = fmtNum(a.downloads) + ' downloads';
+  document.getElementById('pvLikes').textContent = '❤ ' + fmtNum(a.likes);
+  const fmtEl = document.getElementById('pvFmt');
+  fmtEl.textContent = a.format;
+  fmtEl.className = (FMT_COLORS[a.format] || 'bg-gray-500') + ' px-2 py-1 rounded-lg text-xs font-bold text-white';
+  document.getElementById('previewModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  lucide.createIcons();
+}
+function closePreview() {
+  document.getElementById('previewModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+function downloadFromPreview() {
+  if (!currentPreviewAsset) return;
+  closePreview();
+  openDownload(currentPreviewAsset.id);
+}
+function likeCurrentAsset() {
+  if (!currentPreviewAsset) return;
+  const a = ASSETS.find(x => x.id === currentPreviewAsset.id);
+  if (a) a.likes++;
+  showToast('❤️ Added to liked assets!');
+}
+function shareCurrentAsset() {
+  const text = encodeURIComponent(`Download "${currentPreviewAsset?.title}" free on FreeAssetsHub! https://freeassetshub.com`);
+  window.open('https://wa.me/?text=' + text, '_blank');
+}
+
+// ---- DOWNLOAD MODAL ----
+function openDownload(id) {
+  const a = ASSETS.find(x => x.id === id);
+  if (!a) return;
+  pendingDownload = a;
+  document.getElementById('modalAssetTitle').textContent = a.title;
+  const meta = document.getElementById('modalMeta');
+  meta.classList.remove('hidden');
+  document.getElementById('modalThumb').src = a.thumb;
+  document.getElementById('modalTitle').textContent = a.title;
+  document.getElementById('modalFormat').textContent = `${a.format} • ${a.size}`;
+  document.getElementById('downloadModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  lucide.createIcons();
+  startCountdown();
+}
+function closeDownloadModal() {
+  document.getElementById('downloadModal').classList.add('hidden');
+  document.body.style.overflow = '';
+  clearInterval(dlTimer);
+  document.getElementById('countdownNum').textContent = '5';
+  document.getElementById('countdownBar').style.width = '0%';
+  const btn = document.getElementById('dlNowBtn');
+  btn.disabled = true; btn.classList.add('opacity-50','cursor-not-allowed');
+}
+function startCountdown() {
+  let s = 5;
+  const numEl = document.getElementById('countdownNum');
+  const barEl = document.getElementById('countdownBar');
+  const btn = document.getElementById('dlNowBtn');
+  numEl.textContent = s; barEl.style.width = '0%';
+  btn.disabled = true; btn.classList.add('opacity-50','cursor-not-allowed');
+  clearInterval(dlTimer);
+  dlTimer = setInterval(() => {
+    s--;
+    numEl.textContent = s;
+    barEl.style.width = `${((5 - s) / 5) * 100}%`;
+    if (s <= 0) {
+      clearInterval(dlTimer);
+      btn.disabled = false;
+      btn.classList.remove('opacity-50','cursor-not-allowed');
+      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download Now — Free!';
+    }
+  }, 1000);
+}
+function startActualDownload() {
+  if (!pendingDownload) return;
+  const a = ASSETS.find(x => x.id === pendingDownload.id);
+  if (a) a.downloads++;
+  closeDownloadModal();
+
+  const url = pendingDownload.downloadUrl;
+  if (!url || url === '#' || url.trim() === '') {
+    showToast('⚠️ This is a sample asset — admin needs to add a real file URL.');
+    return;
+  }
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', '');
+  link.target = '_blank';
+  link.rel = 'noopener';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  showToast('⬇️ Download started! Enjoy your free asset.');
+}
+
+// ---- SHARE ----
+function shareWhatsApp() {
+  const t = encodeURIComponent(`Check out "${pendingDownload?.title}" on FreeAssetsHub — Free Downloads! https://freeassetshub.com`);
+  window.open('https://wa.me/?text=' + t, '_blank');
+}
+function shareTelegram() {
+  const t = encodeURIComponent(`Free Download: "${pendingDownload?.title}" https://freeassetshub.com`);
+  window.open('https://t.me/share/url?url=' + encodeURIComponent('https://freeassetshub.com') + '&text=' + t, '_blank');
+}
+
+// ---- LAZY LOAD ----
+function initLazyLoad() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.classList.add('loaded'); });
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const img = e.target;
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+          img.addEventListener('load', () => img.classList.add('loaded'));
+          img.removeAttribute('data-src');
+        }
+        obs.unobserve(img);
+      }
+    });
+  }, { rootMargin: '150px' });
+  document.querySelectorAll('img[data-src]').forEach(img => obs.observe(img));
+}
+
+// ---- UTILS ----
+function fmtNum(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return n;
+}
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1f2937;color:white;padding:10px 20px;border-radius:50px;font-size:.875rem;z-index:100;animation:toastIn .3s ease';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+</script>
+</body>
+</html>

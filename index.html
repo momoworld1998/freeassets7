@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FreeAssetsHub – Free Digital Assets, Templates & More</title>
+  <meta name="description" content="Download 10,000+ free copyright-free digital assets including Instagram templates, wallpapers, music, GIFs, invitation cards, and more. No login required!" />
+  <meta name="keywords" content="free digital assets, instagram templates, whatsapp status, youtube thumbnails, wallpapers, free music, invitation cards, png stickers, gif cards" />
+  <meta name="author" content="FreeAssetsHub" />
+  <meta name="robots" content="index, follow" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="FreeAssetsHub – Free Digital Assets for Everyone" />
+  <meta property="og:description" content="Download free copyright-free digital assets. No login required!" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://freeassetshub.com" />
+  <meta property="og:image" content="https://freeassetshub.com/assets/og-image.jpg" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FreeAssetsHub – Free Digital Assets" />
+  <meta name="twitter:description" content="Download 10,000+ free digital assets. No signup needed!" />
+  <!-- Schema.org Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "FreeAssetsHub",
+    "url": "https://freeassetshub.com",
+    "description": "Free copyright-free digital assets for download",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://freeassetshub.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- Google AdSense — Replace ca-pub-XXXXXXXXXXXXXXXX with your Publisher ID -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { display: ['Syne', 'sans-serif'], body: ['DM Sans', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#f5f3ff', 100:'#ede9fe', 500:'#8b5cf6', 600:'#7c3aed', 700:'#6d28d9', 900:'#2e1065' },
+            accent: { 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-body transition-colors duration-300">
+
+<!-- ===== STICKY NAVBAR ===== -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <!-- Logo -->
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+        <span class="text-white font-display font-bold text-sm">FA</span>
+      </div>
+      <span class="font-display font-bold text-lg text-gray-900 dark:text-white">Free<span class="text-brand-500">Assets</span>Hub</span>
+    </a>
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <a href="index.html" class="text-brand-600 dark:text-brand-400">Home</a>
+      <a href="categories.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">Categories</a>
+      <a href="trending.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">Trending</a>
+      <a href="about.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">About</a>
+      <a href="contact.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">Contact</a>
+    </div>
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3">
+      <!-- Theme Toggle -->
+      <button id="themeToggle" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle theme">
+        <i data-lucide="sun" class="w-4 h-4 dark:hidden text-gray-600"></i>
+        <i data-lucide="moon" class="w-4 h-4 hidden dark:block text-gray-300"></i>
+      </button>
+      <!-- Mobile Menu -->
+      <button id="mobileMenuBtn" class="md:hidden w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center" aria-label="Menu">
+        <i data-lucide="menu" class="w-4 h-4 text-gray-600 dark:text-gray-300"></i>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 px-4 py-4 space-y-3 text-sm font-medium">
+    <a href="index.html" class="block text-brand-600 dark:text-brand-400">Home</a>
+    <a href="categories.html" class="block text-gray-600 dark:text-gray-300">Categories</a>
+    <a href="trending.html" class="block text-gray-600 dark:text-gray-300">Trending</a>
+    <a href="about.html" class="block text-gray-600 dark:text-gray-300">About</a>
+    <a href="contact.html" class="block text-gray-600 dark:text-gray-300">Contact</a>
+    <a href="privacy.html" class="block text-gray-600 dark:text-gray-300">Privacy Policy</a>
+    <a href="terms.html" class="block text-gray-600 dark:text-gray-300">Terms</a>
+  </div>
+</nav>
+
+<!-- ===== HEADER AD BANNER ===== -->
+<div class="mt-16 flex justify-center bg-gray-50 dark:bg-gray-900 py-2">
+  <!-- AdSense Header Ad — Replace slot ID -->
+  <ins class="adsbygoogle" style="display:block;width:728px;max-width:100%;height:90px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111" data-ad-format="horizontal"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== HERO SECTION ===== -->
+<section class="site-hero-section relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-700 to-accent-600 py-20 md:py-28">
+  <!-- Background pattern -->
+  <div class="absolute inset-0 opacity-10" style="background-image:radial-gradient(circle at 20% 50%, white 1px, transparent 1px),radial-gradient(circle at 80% 20%, white 1px, transparent 1px);background-size:40px 40px;"></div>
+  <!-- Glowing orbs -->
+  <div class="absolute top-10 left-10 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+  <div class="absolute bottom-10 right-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay:1s"></div>
+
+  <div class="relative max-w-4xl mx-auto px-4 text-center">
+    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 text-white/80 text-sm font-medium mb-6">
+      <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+      10,000+ Free Assets — No Login Required
+    </div>
+    <h1 class="font-display font-extrabold text-4xl md:text-6xl text-white leading-tight mb-4">
+      <span id="heroTitle1Text">Download Free</span><br /><span id="heroTitle2Text" class="bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-pink-300">Digital Assets</span>
+    </h1>
+    <p id="heroSubtitleText" class="text-white/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+      Templates, wallpapers, music, GIFs, invitation cards & more. 100% copyright-free. Completely free to download.
+    </p>
+
+    <!-- Search Bar -->
+    <div class="relative max-w-2xl mx-auto">
+      <div class="flex bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+        <div class="flex-1 flex items-center px-5 gap-3">
+          <i data-lucide="search" class="w-5 h-5 text-gray-400 flex-shrink-0"></i>
+          <input id="heroSearch" type="text" placeholder="Search wallpapers, templates, music..." class="flex-1 bg-transparent py-4 text-gray-800 dark:text-white outline-none text-base placeholder-gray-400" autocomplete="off" />
+        </div>
+        <button onclick="doSearch()" class="bg-gradient-to-r from-brand-600 to-accent-500 text-white px-6 py-4 font-semibold hover:opacity-90 transition-opacity text-sm">Search</button>
+      </div>
+      <!-- Search Suggestions -->
+      <div id="searchSuggestions" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-800 z-50 overflow-hidden"></div>
+      <!-- Trending Keywords -->
+      <div class="flex flex-wrap justify-center gap-2 mt-4">
+        <span class="text-white/50 text-sm">Trending:</span>
+        <button onclick="setSearch('Instagram Templates')" class="bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-1 rounded-full transition-colors">Instagram Templates</button>
+        <button onclick="setSearch('Wedding Cards')" class="bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-1 rounded-full transition-colors">Wedding Cards</button>
+        <button onclick="setSearch('4K Wallpapers')" class="bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-1 rounded-full transition-colors">4K Wallpapers</button>
+        <button onclick="setSearch('YouTube Thumbnails')" class="bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-1 rounded-full transition-colors">YouTube Thumbnails</button>
+        <button onclick="setSearch('Free Music')" class="bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-1 rounded-full transition-colors">Free Music</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="flex flex-wrap justify-center gap-8 mt-12">
+      <div class="text-center"><div id="stat1NumText" class="font-display font-bold text-3xl text-white">10K+</div><div id="stat1LabelText" class="text-white/60 text-sm">Free Assets</div></div>
+      <div class="text-center"><div class="font-display font-bold text-3xl text-white">20</div><div class="text-white/60 text-sm">Categories</div></div>
+      <div class="text-center"><div id="stat2NumText" class="font-display font-bold text-3xl text-white">500K+</div><div id="stat2LabelText" class="text-white/60 text-sm">Downloads</div></div>
+      <div class="text-center"><div class="font-display font-bold text-3xl text-white">100%</div><div class="text-white/60 text-sm">Copyright Free</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== POPULAR CATEGORIES ===== -->
+<section data-section="categories" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h2 class="font-display font-bold text-2xl md:text-3xl text-gray-900 dark:text-white">Popular Categories</h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Browse assets by type</p>
+    </div>
+    <a href="categories.html" class="text-brand-600 dark:text-brand-400 text-sm font-semibold hover:underline flex items-center gap-1">
+      View All <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="categoriesGrid">
+    <!-- Dynamically populated by JS -->
+  </div>
+</section>
+
+<!-- ===== IN-CONTENT AD ===== -->
+<div class="flex justify-center py-4 bg-gray-50 dark:bg-gray-900/50">
+  <ins class="adsbygoogle" style="display:block;width:336px;height:280px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="2222222222" data-ad-format="rectangle"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== FILTER TABS ===== -->
+<section class="max-w-7xl mx-auto px-4 pt-12">
+  <div class="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-2">
+    <button onclick="filterAssets('all')" class="filter-btn active whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-brand-600 text-white transition-all">All Assets</button>
+    <button onclick="filterAssets('trending')" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-brand-100 dark:hover:bg-brand-900/30 transition-all">🔥 Trending</button>
+    <button onclick="filterAssets('new')" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-brand-100 dark:hover:bg-brand-900/30 transition-all">✨ New</button>
+    <button onclick="filterAssets('mostdownloaded')" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-brand-100 dark:hover:bg-brand-900/30 transition-all">⬇️ Most Downloaded</button>
+    <button onclick="filterAssets('hd')" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-brand-100 dark:hover:bg-brand-900/30 transition-all">🖥 HD</button>
+    <button onclick="filterAssets('animated')" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-brand-100 dark:hover:bg-brand-900/30 transition-all">🎬 Animated</button>
+    <button onclick="filterAssets('free')" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-brand-100 dark:hover:bg-brand-900/30 transition-all">🆓 Free</button>
+  </div>
+</section>
+
+<!-- ===== TRENDING ASSETS (Masonry Grid) ===== -->
+<section data-section="trending" class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex items-center gap-3 mb-6">
+    <h2 class="font-display font-bold text-2xl md:text-3xl text-gray-900 dark:text-white">Trending Assets</h2>
+    <span class="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold px-2 py-0.5 rounded-full">HOT</span>
+  </div>
+  <!-- Masonry Grid -->
+  <div id="assetGrid" class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 space-y-4">
+    <!-- Populated by JS -->
+  </div>
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button onclick="loadMore()" id="loadMoreBtn" class="bg-gradient-to-r from-brand-600 to-accent-500 text-white px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-lg">Load More Assets</button>
+  </div>
+</section>
+
+<!-- ===== FREE MUSIC SECTION ===== -->
+<section data-section="music" class="bg-gradient-to-r from-brand-900 to-accent-700 py-14">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="font-display font-bold text-2xl md:text-3xl text-white">🎵 Free Background Music</h2>
+        <p class="text-white/60 text-sm mt-1">Copyright-free music for your projects</p>
+      </div>
+      <a href="categories.html?cat=music" class="bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">View All</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="musicGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===== INVITATION CARDS SECTION ===== -->
+<section data-section="invitations" class="max-w-7xl mx-auto px-4 py-14">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h2 class="font-display font-bold text-2xl md:text-3xl text-gray-900 dark:text-white">💌 Invitation Cards</h2>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Wedding, Birthday, Opening Ceremony & more</p>
+    </div>
+    <a href="categories.html?cat=invitations" class="text-brand-600 dark:text-brand-400 text-sm font-semibold hover:underline">View All</a>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" id="invitationGrid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- ===== SIDEBAR AD ===== -->
+<!-- GIF + WALLPAPER split section with sidebar ad -->
+<section data-section="gifs" class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex gap-6">
+    <!-- Left: GIF Section -->
+    <div class="flex-1">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="font-display font-bold text-2xl text-gray-900 dark:text-white">🎞 GIF Cards</h2>
+        <a href="categories.html?cat=gifs" class="text-brand-600 dark:text-brand-400 text-sm font-semibold hover:underline">View All</a>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="gifGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+    <!-- Right: Sidebar Ad (desktop only) -->
+    <div class="hidden lg:block w-64 flex-shrink-0">
+      <div class="sticky top-20">
+        <ins class="adsbygoogle" style="display:block;width:160px;height:600px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="vertical"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WALLPAPER SECTION ===== -->
+<section data-section="wallpapers" class="bg-gray-50 dark:bg-gray-900/50 py-14">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="font-display font-bold text-2xl md:text-3xl text-gray-900 dark:text-white">🖼 Wallpapers</h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">4K Mobile & Desktop Wallpapers</p>
+      </div>
+      <a href="categories.html?cat=wallpapers" class="text-brand-600 dark:text-brand-400 text-sm font-semibold hover:underline">View All</a>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3" id="wallpaperGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="bg-gray-950 text-gray-400 pt-14 pb-6">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+      <!-- Brand -->
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+            <span class="text-white font-display font-bold text-sm">FA</span>
+          </div>
+          <span class="font-display font-bold text-white text-lg">FreeAssetsHub</span>
+        </div>
+        <p class="text-sm leading-relaxed mb-4">Your one-stop destination for free copyright-free digital assets. Templates, music, wallpapers and more — completely free.</p>
+        <div class="flex gap-3">
+          <a href="https://wa.me/918817644730" target="_blank" class="contact-whatsapp-link w-9 h-9 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-500 transition-colors" aria-label="WhatsApp"><i data-lucide="message-circle" class="w-4 h-4 text-white"></i></a>
+          <a href="https://t.me/freeassetshub" target="_blank" class="contact-telegram-link w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors" aria-label="Telegram"><i data-lucide="send" class="w-4 h-4 text-white"></i></a>
+          <a href="mailto:croma.laxmielectronics@gmail.com" class="contact-email-link w-9 h-9 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-400 transition-colors" aria-label="Email"><i data-lucide="mail" class="w-4 h-4 text-white"></i></a>
+        </div>
+      </div>
+      <!-- Categories -->
+      <div>
+        <h4 class="font-display font-semibold text-white mb-4">Categories</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="categories.html?cat=instagram" class="hover:text-brand-400 transition-colors">Instagram Templates</a></li>
+          <li><a href="categories.html?cat=wallpapers" class="hover:text-brand-400 transition-colors">Wallpapers</a></li>
+          <li><a href="categories.html?cat=thumbnails" class="hover:text-brand-400 transition-colors">YouTube Thumbnails</a></li>
+          <li><a href="categories.html?cat=music" class="hover:text-brand-400 transition-colors">Background Music</a></li>
+          <li><a href="categories.html?cat=invitations" class="hover:text-brand-400 transition-colors">Invitation Cards</a></li>
+          <li><a href="categories.html?cat=gifs" class="hover:text-brand-400 transition-colors">GIF Cards</a></li>
+        </ul>
+      </div>
+      <!-- Company -->
+      <div>
+        <h4 class="font-display font-semibold text-white mb-4">Company</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="about.html" class="hover:text-brand-400 transition-colors">About Us</a></li>
+          <li><a href="contact.html" class="hover:text-brand-400 transition-colors">Contact Us</a></li>
+          <li><a href="privacy.html" class="hover:text-brand-400 transition-colors">Privacy Policy</a></li>
+          <li><a href="terms.html" class="hover:text-brand-400 transition-colors">Terms & Conditions</a></li>
+          <li><a href="dmca.html" class="hover:text-brand-400 transition-colors">DMCA</a></li>
+          <li><a href="admin/login.html" class="hover:text-brand-400 transition-colors">Admin Panel</a></li>
+        </ul>
+      </div>
+      <!-- Contact -->
+      <div>
+        <h4 class="font-display font-semibold text-white mb-4">Contact Us</h4>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-brand-400"></i><a href="tel:+918817644730" class="contact-phone-link hover:text-brand-400 transition-colors"><span class="contact-phone-text">+91 88176 44730</span></a></li>
+          <li class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-brand-400"></i><a href="mailto:croma.laxmielectronics@gmail.com" class="contact-email-link hover:text-brand-400 transition-colors break-all"><span class="contact-email-text">croma.laxmielectronics@gmail.com</span></a></li>
+        </ul>
+        <div class="mt-4 p-3 bg-gray-900 rounded-lg border border-gray-800">
+          <p class="text-xs text-gray-500">All assets are copyright-free and safe for personal & commercial use.</p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-600">
+      <p>© 2025 FreeAssetsHub. All Rights Reserved.</p>
+      <p>Made with ❤️ for creators</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== STICKY MOBILE AD ===== -->
+<div id="stickyMobileAd" class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-center py-1">
+  <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="4444444444" data-ad-format="mobile-banner"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  <button onclick="document.getElementById('stickyMobileAd').style.display='none'" class="absolute right-2 top-1 text-gray-400 text-xs">✕</button>
+</div>
+
+<!-- ===== DOWNLOAD MODAL ===== -->
+<div id="downloadModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDownloadModal()"></div>
+  <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-gray-800">
+    <button onclick="closeDownloadModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+    <div class="text-center mb-6">
+      <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="download" class="w-8 h-8 text-brand-600 dark:text-brand-400"></i>
+      </div>
+      <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-1">Free Download</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm">Watch a short ad to unlock your free download</p>
+    </div>
+    <!-- Ad Placeholder in Modal -->
+    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 mb-4 text-center min-h-[100px] flex items-center justify-center">
+      <ins class="adsbygoogle" style="display:inline-block;width:300px;height:100px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="5555555555"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-sm text-gray-500 dark:text-gray-400">Unlocking in:</span>
+      <div id="countdownDisplay" class="font-display font-bold text-2xl text-brand-600 dark:text-brand-400">5</div>
+    </div>
+    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
+      <div id="countdownBar" class="bg-gradient-to-r from-brand-500 to-accent-500 h-2 rounded-full transition-all duration-1000" style="width:0%"></div>
+    </div>
+    <button id="downloadNowBtn" onclick="startActualDownload()" disabled class="w-full bg-gradient-to-r from-brand-600 to-accent-500 text-white py-3 rounded-xl font-semibold opacity-50 cursor-not-allowed transition-all">
+      <i data-lucide="download" class="w-4 h-4 inline mr-2"></i>
+      Download Now
+    </button>
+    <div class="flex gap-3 mt-3">
+      <button onclick="shareWhatsApp()" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+        <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+      </button>
+      <button onclick="shareTelegram()" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+        <i data-lucide="send" class="w-4 h-4"></i> Telegram
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ASSET PREVIEW MODAL ===== -->
+<div id="previewModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closePreviewModal()"></div>
+  <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-gray-100 dark:border-gray-800">
+    <button onclick="closePreviewModal()" class="absolute top-4 right-4 z-10 bg-black/50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/70">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+    <div class="relative bg-gray-100 dark:bg-gray-800">
+      <img id="previewImage" src="" alt="Preview" class="w-full max-h-96 object-contain" style="filter:url(#watermark)" />
+      <!-- Watermark SVG Filter -->
+      <svg class="hidden"><defs><filter id="watermark"><feImage href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='50'><text x='10' y='35' font-size='16' fill='rgba(255,255,255,0.3)' transform='rotate(-20)'>FreeAssetsHub</text></svg>" result="wm" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"/><feBlend in="SourceGraphic" in2="wm" mode="over"/></filter></defs></svg>
+    </div>
+    <div class="p-5">
+      <h3 id="previewTitle" class="font-display font-bold text-xl text-gray-900 dark:text-white mb-1"></h3>
+      <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <span id="previewCategory" class="bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2 py-0.5 rounded-full text-xs font-medium"></span>
+        <span id="previewDownloads"></span>
+        <span id="previewFormat"></span>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="openDownloadModal(currentAsset)" class="flex-1 bg-gradient-to-r from-brand-600 to-accent-500 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+          <i data-lucide="download" class="w-4 h-4"></i> Free Download
+        </button>
+        <button onclick="likeAsset(currentAsset)" class="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-100 transition-colors">
+          <i data-lucide="heart" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="assets/vault.js"></script>
+<script src="js/data.js"></script>
+<script src="js/site-sync.js"></script>
+<script src="js/main.js"></script>
+<a href="ai-wallpaper.html" style="position:fixed;bottom:20px;right:20px;background:#7c3aed;color:white;padding:14px 18px;border-radius:50px;text-decoration:none;font-weight:bold;">AI Wallpapers</a></body>
+</html>

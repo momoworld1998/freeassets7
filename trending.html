@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending – FreeAssetsHub | Most Popular Free Digital Assets</title>
+  <meta name="description" content="Discover the hottest trending digital assets right now — top downloaded templates, wallpapers, music, GIFs and more. Updated daily. 100% free, no login required." />
+  <meta name="keywords" content="trending assets, popular templates, top downloads, hot wallpapers, trending instagram templates, viral templates" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Trending – FreeAssetsHub" />
+  <meta property="og:description" content="The hottest free digital assets right now. Updated daily." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { display: ['Syne', 'sans-serif'], body: ['DM Sans', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#f5f3ff', 100:'#ede9fe', 500:'#8b5cf6', 600:'#7c3aed', 700:'#6d28d9', 900:'#2e1065' },
+            accent: { 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Masonry */
+    .assets-masonry { columns: 2; column-gap: 14px; }
+    @media(min-width:640px){ .assets-masonry { columns: 3; } }
+    @media(min-width:768px){ .assets-masonry { columns: 4; } }
+    @media(min-width:1024px){ .assets-masonry { columns: 5; } }
+
+    .asset-item {
+      break-inside: avoid; margin-bottom: 14px; border-radius: 12px;
+      overflow: hidden; cursor: pointer; position: relative; background: #f3f4f6;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .dark .asset-item { background: #1f2937; }
+    .asset-item:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.14); }
+    .asset-item img { width: 100%; display: block; min-height: 100px; object-fit: cover; }
+    .asset-item .item-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%);
+      opacity: 0; transition: opacity 0.2s;
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 10px;
+    }
+    .asset-item:hover .item-overlay { opacity: 1; }
+    .asset-item .item-meta { padding: 8px 10px; }
+
+    /* Rank badge */
+    .rank-badge {
+      position: absolute; top: 8px; left: 8px; z-index: 5;
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.8rem; color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+    .rank-1 { background: linear-gradient(135deg,#fbbf24,#f59e0b); }
+    .rank-2 { background: linear-gradient(135deg,#cbd5e1,#94a3b8); }
+    .rank-3 { background: linear-gradient(135deg,#fb923c,#ea580c); }
+    .rank-other { background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); }
+
+    /* Time filter pill */
+    .time-pill.active {
+      background: linear-gradient(135deg,#7c3aed,#3b82f6) !important;
+      color: white !important; border-color: transparent !important;
+    }
+
+    /* Cat pill active */
+    .cat-pill.active {
+      background: linear-gradient(135deg,#7c3aed,#3b82f6) !important;
+      color: white !important;
+    }
+
+    /* Leaderboard row */
+    .lb-row { display:flex; align-items:center; gap:14px; padding:12px; border-radius:14px; transition: background .15s; cursor:pointer; }
+    .lb-row:hover { background: rgba(124,58,237,.06); }
+    .dark .lb-row:hover { background: rgba(124,58,237,.1); }
+    .lb-rank {
+      width:32px; height:32px; border-radius:10px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Syne',sans-serif; font-weight:800; font-size:.875rem; color:white;
+    }
+
+    /* Trending flame pulse */
+    @keyframes flamePulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.15); } }
+    .flame-pulse { display:inline-block; animation: flamePulse 1.6s ease-in-out infinite; }
+
+    /* Skeleton */
+    .skel { border-radius:12px; background:linear-gradient(90deg,#e5e7eb 25%,#d1d5db 50%,#e5e7eb 75%); background-size:200% 100%; animation: shimmer 1.5s infinite; }
+    .dark .skel { background:linear-gradient(90deg,#374151 25%,#4b5563 50%,#374151 75%); background-size:200% 100%; }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+
+    @keyframes modalIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+  </style>
+</head>
+
+<body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-body transition-colors duration-300">
+
+<!-- ===== STICKY NAVBAR ===== -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+        <span class="text-white font-display font-bold text-sm">FA</span>
+      </div>
+      <span class="font-display font-bold text-lg text-gray-900 dark:text-white">Free<span class="text-brand-500">Assets</span>Hub</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">Home</a>
+      <a href="categories.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">Categories</a>
+      <a href="trending.html" class="text-brand-600 dark:text-brand-400 font-semibold">Trending</a>
+      <a href="about.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">About</a>
+      <a href="contact.html" class="text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors">Contact</a>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <div class="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1.5">
+        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+        <input id="navSearch" type="text" placeholder="Search assets…" class="bg-transparent outline-none text-sm w-36 text-gray-700 dark:text-gray-200 placeholder-gray-400" />
+      </div>
+      <button id="themeToggle" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle theme">
+        <i data-lucide="sun" class="w-4 h-4 dark:hidden text-gray-600"></i>
+        <i data-lucide="moon" class="w-4 h-4 hidden dark:block text-gray-300"></i>
+      </button>
+      <button id="mobileMenuBtn" class="md:hidden w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center" aria-label="Menu">
+        <i data-lucide="menu" class="w-4 h-4 text-gray-600 dark:text-gray-300"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 px-4 py-4 space-y-3 text-sm font-medium">
+    <div class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-xl px-3 py-2 mb-3">
+      <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+      <input id="mobileSearch" type="text" placeholder="Search assets…" class="bg-transparent outline-none text-sm flex-1 text-gray-700 dark:text-gray-200 placeholder-gray-400" />
+    </div>
+    <a href="index.html" class="block text-gray-700 dark:text-gray-300">Home</a>
+    <a href="categories.html" class="block text-gray-700 dark:text-gray-300">Categories</a>
+    <a href="trending.html" class="block text-brand-600 dark:text-brand-400">Trending</a>
+    <a href="about.html" class="block text-gray-700 dark:text-gray-300">About</a>
+    <a href="contact.html" class="block text-gray-700 dark:text-gray-300">Contact</a>
+    <a href="privacy.html" class="block text-gray-700 dark:text-gray-300">Privacy Policy</a>
+    <a href="terms.html" class="block text-gray-700 dark:text-gray-300">Terms</a>
+  </div>
+</nav>
+
+<!-- ===== HEADER AD ===== -->
+<div class="mt-16 flex justify-center bg-gray-50 dark:bg-gray-900 py-2">
+  <ins class="adsbygoogle" style="display:block;width:728px;max-width:100%;height:90px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111" data-ad-format="horizontal"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="relative bg-gradient-to-br from-red-600 via-brand-700 to-accent-600 pt-12 pb-10 overflow-hidden">
+  <div class="absolute inset-0 opacity-10" style="background-image:radial-gradient(circle at 25% 40%, white 1px, transparent 1px);background-size:36px 36px;"></div>
+  <div class="absolute top-0 right-0 w-96 h-96 bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-25"></div>
+  <div class="relative max-w-7xl mx-auto px-4 text-center">
+    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 text-white/80 text-sm font-medium mb-5 trending-page-badge">
+      <span class="flame-pulse">🔥</span> Updated Daily — Live Trending Data
+    </div>
+    <h1 class="font-display font-extrabold text-3xl md:text-5xl text-white mb-3">
+      What's <span class="trending-page-title bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-orange-300">Trending</span> Right Now
+    </h1>
+    <p class="trending-page-subtitle text-white/70 text-base md:text-lg mb-8 max-w-xl mx-auto">
+      The most downloaded, most liked, and hottest new assets — handpicked from real download data.
+    </p>
+
+    <!-- Time period filters -->
+    <div class="flex flex-wrap justify-center gap-2 mb-2">
+      <button onclick="setTimePeriod('today')" id="time-today" class="time-pill whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all">📅 Today</button>
+      <button onclick="setTimePeriod('week')" id="time-week" class="time-pill active whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all">🗓 This Week</button>
+      <button onclick="setTimePeriod('month')" id="time-month" class="time-pill whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all">📆 This Month</button>
+      <button onclick="setTimePeriod('alltime')" id="time-alltime" class="time-pill whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all">⭐ All Time</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUICK STATS BAR ===== -->
+<section data-trending-section="stats" class="max-w-7xl mx-auto px-4 -mt-6 relative z-10">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-4 text-center">
+      <p class="font-display font-extrabold text-2xl text-gray-900 dark:text-white" id="statTrendingCount">--</p>
+      <p class="text-gray-400 text-xs mt-0.5">🔥 Trending Now</p>
+    </div>
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-4 text-center">
+      <p class="font-display font-extrabold text-2xl text-gray-900 dark:text-white" id="statTotalDownloads">--</p>
+      <p class="text-gray-400 text-xs mt-0.5">⬇ Total Downloads</p>
+    </div>
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-4 text-center">
+      <p class="font-display font-extrabold text-2xl text-gray-900 dark:text-white" id="statTopCategory">--</p>
+      <p class="text-gray-400 text-xs mt-0.5">🏆 Top Category</p>
+    </div>
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-4 text-center">
+      <p class="font-display font-extrabold text-2xl text-gray-900 dark:text-white" id="statNewToday">--</p>
+      <p class="text-gray-400 text-xs mt-0.5">✨ New This Week</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TOP 3 SPOTLIGHT ===== -->
+<section data-trending-section="top3" class="max-w-7xl mx-auto px-4 py-10">
+  <div class="flex items-center gap-2 mb-6">
+    <h2 class="font-display font-bold text-2xl md:text-3xl text-gray-900 dark:text-white">🏆 Top 3 This Week</h2>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="top3Grid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- ===== IN-CONTENT AD ===== -->
+<div class="flex justify-center py-4 bg-gray-50 dark:bg-gray-900/50">
+  <ins class="adsbygoogle" style="display:block;width:728px;max-width:100%;height:90px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="6666666666" data-ad-format="horizontal"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== MAIN TRENDING GRID + SIDEBAR ===== -->
+<section class="max-w-7xl mx-auto px-4 py-10">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div>
+      <h2 class="font-display font-bold text-2xl text-gray-900 dark:text-white flex items-center gap-2">
+        <span class="flame-pulse">🔥</span> Trending Assets
+      </h2>
+      <p class="text-gray-400 text-sm mt-0.5" id="trendingSubheading">Top picks for this week</p>
+    </div>
+    <select id="trendingSort" onchange="renderTrendingGrid()" class="bg-gray-100 dark:bg-gray-800 border-0 text-gray-700 dark:text-gray-300 text-sm rounded-xl px-3 py-2 outline-none cursor-pointer">
+      <option value="downloads">Sort: Most Downloaded</option>
+      <option value="likes">Sort: Most Liked</option>
+      <option value="newest">Sort: Newest First</option>
+    </select>
+  </div>
+
+  <div class="flex gap-6">
+    <!-- LEFT: main content -->
+    <div class="flex-1 min-w-0">
+      <!-- Category pill filters -->
+      <div class="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-3 mb-5">
+        <button onclick="selectCatPill('all')" id="catpill-all" class="cat-pill active whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 transition-all flex-shrink-0">All Categories</button>
+        <div id="catPillsContainer" class="flex items-center gap-2"></div>
+      </div>
+
+      <p id="resultsCount" class="text-sm text-gray-400 mb-4"></p>
+
+      <!-- Trending Assets Masonry -->
+      <div id="trendingGrid" class="assets-masonry"></div>
+
+      <!-- No results -->
+      <div id="noResults" class="hidden text-center py-16">
+        <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">🔥</div>
+        <h3 class="font-display font-bold text-xl text-gray-800 dark:text-gray-200 mb-2">No trending assets in this category yet</h3>
+        <p class="text-gray-400 text-sm mb-6">Try a different category or check back soon.</p>
+        <button onclick="selectCatPill('all')" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors">View All Trending</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: sidebar -->
+    <aside class="hidden lg:block w-72 flex-shrink-0">
+      <div class="sticky top-20 space-y-5">
+        <!-- Trending searches -->
+        <div class="bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4">
+          <h3 class="font-display font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2 text-sm">
+            🔍 Trending Searches
+          </h3>
+          <div class="flex flex-wrap gap-2" id="trendingSearchTags"></div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div data-trending-section="leaderboard" class="bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4">
+          <h3 class="font-display font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2 text-sm">
+            📊 Download Leaderboard
+          </h3>
+          <div id="leaderboardList" class="space-y-1"></div>
+        </div>
+
+        <!-- Sidebar Ad -->
+        <div class="sticky">
+          <ins class="adsbygoogle" style="display:block;width:100%;height:300px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="rectangle"></ins>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ===== TRENDING CATEGORIES STRIP ===== -->
+<section data-trending-section="catstrip" class="bg-gray-50 dark:bg-gray-900/60 py-12">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="font-display font-bold text-2xl text-gray-900 dark:text-white mb-6 text-center">📈 Trending Categories</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4" id="trendingCatsGrid"></div>
+  </div>
+</section>
+
+<!-- ===== BOTTOM AD ===== -->
+<div class="flex justify-center py-4 bg-gray-50 dark:bg-gray-900/50">
+  <ins class="adsbygoogle" style="display:block;width:728px;max-width:100%;height:90px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="7777777777" data-ad-format="horizontal"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="bg-gray-950 text-gray-400 pt-14 pb-6">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center"><span class="text-white font-display font-bold text-sm">FA</span></div>
+          <span class="font-display font-bold text-white">FreeAssetsHub</span>
+        </div>
+        <p class="text-xs leading-relaxed">Your one-stop destination for free copyright-free digital assets.</p>
+        <div class="flex gap-3 mt-4">
+          <a href="https://wa.me/918817644730" target="_blank" class="contact-whatsapp-link w-8 h-8 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-500 transition-colors"><i data-lucide="message-circle" class="w-3.5 h-3.5 text-white"></i></a>
+          <a href="https://t.me/freeassetshub" target="_blank" class="contact-telegram-link w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors"><i data-lucide="send" class="w-3.5 h-3.5 text-white"></i></a>
+          <a href="mailto:croma.laxmielectronics@gmail.com" class="contact-email-link w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-400 transition-colors"><i data-lucide="mail" class="w-3.5 h-3.5 text-white"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-display font-semibold text-white mb-3 text-sm">Top Categories</h4>
+        <ul class="space-y-1.5 text-xs">
+          <li><a href="categories.html?cat=wallpapers" class="hover:text-brand-400 transition-colors">🖼 Wallpapers</a></li>
+          <li><a href="categories.html?cat=instagram" class="hover:text-brand-400 transition-colors">📸 Instagram</a></li>
+          <li><a href="categories.html?cat=music" class="hover:text-brand-400 transition-colors">🎵 Free Music</a></li>
+          <li><a href="categories.html?cat=invitations" class="hover:text-brand-400 transition-colors">💌 Invitations</a></li>
+          <li><a href="categories.html?cat=gifs" class="hover:text-brand-400 transition-colors">🎞 GIFs</a></li>
+          <li><a href="categories.html?cat=memes" class="hover:text-brand-400 transition-colors">😂 Memes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display font-semibold text-white mb-3 text-sm">Company</h4>
+        <ul class="space-y-1.5 text-xs">
+          <li><a href="about.html" class="hover:text-brand-400 transition-colors">About Us</a></li>
+          <li><a href="contact.html" class="hover:text-brand-400 transition-colors">Contact Us</a></li>
+          <li><a href="privacy.html" class="hover:text-brand-400 transition-colors">Privacy Policy</a></li>
+          <li><a href="terms.html" class="hover:text-brand-400 transition-colors">Terms & Conditions</a></li>
+          <li><a href="dmca.html" class="hover:text-brand-400 transition-colors">DMCA</a></li>
+          <li><a href="admin/login.html" class="hover:text-brand-400 transition-colors">Admin Panel</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display font-semibold text-white mb-3 text-sm">Contact</h4>
+        <ul class="space-y-2 text-xs">
+          <li class="flex items-center gap-2"><i data-lucide="phone" class="w-3.5 h-3.5 text-brand-400"></i><a href="tel:+918817644730" class="contact-phone-link hover:text-brand-400"><span class="contact-phone-text">+91 88176 44730</span></a></li>
+          <li class="flex items-start gap-2"><i data-lucide="mail" class="w-3.5 h-3.5 text-brand-400 mt-0.5"></i><a href="mailto:croma.laxmielectronics@gmail.com" class="contact-email-link hover:text-brand-400 break-all"><span class="contact-email-text">croma.laxmielectronics@gmail.com</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 pt-5 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-gray-600">
+      <p>© 2025 FreeAssetsHub. All Rights Reserved.</p>
+      <p>Made with ❤️ for creators</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== STICKY MOBILE AD ===== -->
+<div id="stickyMobileAd" class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-center py-1">
+  <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="4444444444" data-ad-format="mobile-banner"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  <button onclick="document.getElementById('stickyMobileAd').style.display='none'" class="absolute right-2 top-1 text-gray-400 text-xs">✕</button>
+</div>
+
+<!-- ===== DOWNLOAD MODAL ===== -->
+<div id="downloadModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDownloadModal()"></div>
+  <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-gray-800" style="animation:modalIn .3s ease">
+    <button onclick="closeDownloadModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+    <div class="text-center mb-5">
+      <div class="w-14 h-14 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl">⬇️</div>
+      <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-1">Free Download</h3>
+      <p class="text-gray-400 text-sm">Watch a short ad to unlock your download</p>
+    </div>
+    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-3 mb-4 min-h-[90px] flex items-center justify-center">
+      <ins class="adsbygoogle" style="display:inline-block;width:300px;height:100px;" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="5555555555"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm text-gray-500 dark:text-gray-400">Unlocking download in:</span>
+      <span id="countdownNum" class="font-display font-bold text-2xl text-brand-600 dark:text-brand-400">5</span>
+    </div>
+    <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-5 overflow-hidden">
+      <div id="countdownBar" class="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000" style="width:0%"></div>
+    </div>
+    <div id="modalMeta" class="flex items-center gap-3 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl hidden">
+      <img id="modalThumb" src="" alt="" class="w-12 h-12 rounded-lg object-cover" />
+      <div>
+        <p id="modalTitle" class="text-sm font-semibold text-gray-800 dark:text-gray-200"></p>
+        <p id="modalFormat" class="text-xs text-gray-400"></p>
+      </div>
+    </div>
+    <button id="dlNowBtn" onclick="startActualDownload()" disabled class="w-full bg-gradient-to-r from-brand-600 to-accent-500 text-white py-3 rounded-xl font-semibold opacity-50 cursor-not-allowed transition-all mb-3 flex items-center justify-center gap-2">
+      <i data-lucide="download" class="w-4 h-4"></i> Download Now — Free!
+    </button>
+    <div class="flex gap-3">
+      <button onclick="shareWhatsApp()" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"><i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp</button>
+      <button onclick="shareTelegram()" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i> Telegram</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PREVIEW MODAL ===== -->
+<div id="previewModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closePreview()"></div>
+  <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-gray-800" style="animation:modalIn .3s ease">
+    <button onclick="closePreview()" class="absolute top-3 right-3 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+    <div class="relative bg-gray-100 dark:bg-gray-800">
+      <img id="pvImg" src="" alt="Preview" class="w-full max-h-80 object-contain" />
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-25">
+        <div class="text-white font-display font-bold text-2xl rotate-[-20deg] whitespace-nowrap">FreeAssetsHub</div>
+      </div>
+    </div>
+    <div class="p-5">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h3 id="pvTitle" class="font-display font-bold text-lg text-gray-900 dark:text-white"></h3>
+          <div class="flex items-center gap-3 mt-1 text-xs text-gray-400">
+            <span id="pvCat" class="bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 px-2 py-0.5 rounded-full font-medium capitalize"></span>
+            <span id="pvDl"></span>
+            <span id="pvLikes"></span>
+          </div>
+        </div>
+        <span id="pvFmt" class="flex-shrink-0 px-2 py-1 rounded-lg text-xs font-bold text-white"></span>
+      </div>
+      <div class="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-gray-800">
+        <button id="pvDownloadBtn" onclick="downloadFromPreview()" class="flex-1 bg-gradient-to-r from-brand-600 to-accent-500 text-white py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+          <i data-lucide="download" class="w-4 h-4"></i> Free Download
+        </button>
+        <button onclick="likeCurrentAsset()" id="pvLikeBtn" class="w-10 h-10 bg-red-50 dark:bg-red-900/20 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"><i data-lucide="heart" class="w-5 h-5"></i></button>
+        <button onclick="shareCurrentAsset()" class="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 text-blue-400 rounded-xl flex items-center justify-center hover:bg-blue-100 transition-colors"><i data-lucide="share-2" class="w-5 h-5"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="assets/vault.js"></script>
+<script src="js/data.js"></script>
+<script src="js/site-sync.js"></script>
+<script>
+// ================================================================
+// trending.js — inline script for trending.html
+// ================================================================
+
+let activeTimePeriod = 'week';
+let activeCatPill    = 'all';
+let currentPreviewAsset = null;
+let pendingDownload     = null;
+let dlTimer             = null;
+
+const FMT_COLORS = {PNG:'bg-blue-500',JPG:'bg-green-500',GIF:'bg-yellow-500',MP4:'bg-red-500',MP3:'bg-purple-500',PSD:'bg-orange-500',ZIP:'bg-gray-600'};
+
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  initTheme();
+  setupNavbarMobile();
+  setupSearches();
+  buildCatPills();
+  buildStats();
+  buildTop3();
+  renderTrendingGrid();
+  buildTrendingSearchTags();
+  buildLeaderboard();
+  buildTrendingCategories();
+});
+
+// ---- THEME ----
+function initTheme() {
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+  document.getElementById('themeToggle')?.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    lucide.createIcons();
+  });
+}
+function setupNavbarMobile() {
+  document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+    document.getElementById('mobileMenu')?.classList.toggle('hidden');
+  });
+}
+
+// ---- HELPER: get assets matching "trending" criteria for a time period ----
+// Since this is a static demo, time periods use different sampling/sorting
+// strategies over the same dataset to simulate daily/weekly/monthly trends.
+function getTrendingAssets(period) {
+  let pool = ASSETS.filter(a => a.published !== false);
+  switch (period) {
+    case 'today':
+      // "Today" — assets tagged new + trending, sorted by likes (freshest buzz)
+      pool = pool.filter(a => a.tags.includes('trending') || a.tags.includes('new'));
+      pool.sort((a,b) => b.likes - a.likes);
+      break;
+    case 'week':
+      // "This week" — trending tagged, sorted by downloads
+      pool = pool.filter(a => a.tags.includes('trending'));
+      pool.sort((a,b) => b.downloads - a.downloads);
+      break;
+    case 'month':
+      // "This month" — broader pool, sorted by downloads
+      pool.sort((a,b) => b.downloads - a.downloads);
+      pool = pool.slice(0, 18);
+      break;
+    case 'alltime':
+    default:
+      // "All time" — pure download leaders
+      pool = [...pool].sort((a,b) => b.downloads - a.downloads);
+      break;
+  }
+  return pool;
+}
+
+// ---- TIME PERIOD ----
+function setTimePeriod(period) {
+  activeTimePeriod = period;
+  document.querySelectorAll('.time-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('time-' + period)?.classList.add('active');
+
+  const labels = {
+    today: 'Hottest picks from today',
+    week: 'Top picks for this week',
+    month: 'Most popular this month',
+    alltime: 'All-time download leaders'
+  };
+  document.getElementById('trendingSubheading').textContent = labels[period] || '';
+
+  buildStats();
+  buildTop3();
+  renderTrendingGrid();
+  buildLeaderboard();
+}
+
+// ---- STATS BAR ----
+function buildStats() {
+  const trending = ASSETS.filter(a => a.tags.includes('trending') && a.published !== false);
+  const totalDownloads = ASSETS.reduce((sum,a) => sum + a.downloads, 0);
+  const newCount = ASSETS.filter(a => a.tags.includes('new') && a.published !== false).length;
+
+  // Find top category by total downloads
+  const catTotals = {};
+  ASSETS.forEach(a => { catTotals[a.category] = (catTotals[a.category]||0) + a.downloads; });
+  let topCatId = Object.keys(catTotals).sort((a,b) => catTotals[b]-catTotals[a])[0];
+  const topCat = CATEGORIES.find(c => c.id === topCatId);
+
+  document.getElementById('statTrendingCount').textContent = trending.length;
+  document.getElementById('statTotalDownloads').textContent = fmtNum(totalDownloads);
+  document.getElementById('statTopCategory').textContent = topCat ? topCat.emoji + ' ' + topCat.name : '—';
+  document.getElementById('statNewToday').textContent = newCount;
+}
+
+// ---- TOP 3 SPOTLIGHT ----
+function buildTop3() {
+  const grid = document.getElementById('top3Grid');
+  if (!grid) return;
+  const top3 = getTrendingAssets(activeTimePeriod).slice(0,3);
+  const medalClasses = ['rank-1','rank-2','rank-3'];
+  const medalEmoji = ['🥇','🥈','🥉'];
+
+  grid.innerHTML = top3.map((a,i) => `
+    <div class="relative rounded-2xl overflow-hidden cursor-pointer group shadow-lg border border-gray-100 dark:border-gray-800" onclick="openPreview(${a.id})">
+      <div class="rank-badge ${medalClasses[i]}">${medalEmoji[i]}</div>
+      <img data-src="${a.thumb}" alt="${a.title}" class="lazy-img w-full object-cover transition-transform duration-300 group-hover:scale-105" style="height:220px;" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex flex-col justify-end p-4">
+        <p class="text-white font-display font-bold text-lg leading-tight mb-1">${a.title}</p>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3 text-white/70 text-xs">
+            <span>⬇ ${fmtNum(a.downloads)}</span>
+            <span>❤ ${fmtNum(a.likes)}</span>
+          </div>
+          <button onclick="event.stopPropagation();openDownload(${a.id})" class="bg-white text-gray-900 text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-brand-50 transition-colors">⬇ Free</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  if (top3.length === 0) {
+    grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-10">No data available for this period.</p>';
+  }
+  initLazyLoad();
+}
+
+// ---- CATEGORY PILLS ----
+function buildCatPills() {
+  const container = document.getElementById('catPillsContainer');
+  if (!container) return;
+  // Only show categories that have at least one trending asset
+  const trendingCatIds = [...new Set(ASSETS.filter(a => a.tags.includes('trending')).map(a => a.category))];
+  const cats = CATEGORIES.filter(c => trendingCatIds.includes(c.id));
+  container.innerHTML = cats.map(c => `
+    <button onclick="selectCatPill('${c.id}')" id="catpill-${c.id}" class="cat-pill whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 transition-all flex-shrink-0">${c.emoji} ${c.name}</button>
+  `).join('');
+}
+function selectCatPill(id) {
+  activeCatPill = id;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('catpill-' + id)?.classList.add('active');
+  renderTrendingGrid();
+}
+
+// ---- MAIN TRENDING GRID ----
+function renderTrendingGrid() {
+  let pool = getTrendingAssets(activeTimePeriod);
+
+  if (activeCatPill !== 'all') pool = pool.filter(a => a.category === activeCatPill);
+
+  // Apply sort dropdown
+  const sortBy = document.getElementById('trendingSort')?.value || 'downloads';
+  if (sortBy === 'likes') pool = [...pool].sort((a,b) => b.likes - a.likes);
+  else if (sortBy === 'newest') pool = [...pool].sort((a,b) => b.id - a.id);
+  else pool = [...pool].sort((a,b) => b.downloads - a.downloads);
+
+  const grid = document.getElementById('trendingGrid');
+  const noResults = document.getElementById('noResults');
+  document.getElementById('resultsCount').textContent = `${pool.length} trending asset${pool.length !== 1 ? 's' : ''}`;
+
+  if (pool.length === 0) {
+    grid.innerHTML = '';
+    noResults.classList.remove('hidden');
+    return;
+  }
+  noResults.classList.add('hidden');
+
+  grid.innerHTML = pool.map((a,i) => renderAssetCard(a,i)).join('');
+  lucide.createIcons();
+  initLazyLoad();
+}
+
+function renderAssetCard(a, index) {
+  const fc = FMT_COLORS[a.format] || 'bg-gray-500';
+  let rankBadge = '';
+  if (index < 3) {
+    const cls = ['rank-1','rank-2','rank-3'][index];
+    const emoji = ['🥇','🥈','🥉'][index];
+    rankBadge = `<div class="rank-badge ${cls}">${emoji}</div>`;
+  } else if (index < 10) {
+    rankBadge = `<div class="rank-badge rank-other">#${index+1}</div>`;
+  }
+  return `
+    <div class="asset-item" onclick="openPreview(${a.id})">
+      ${rankBadge}
+      <img data-src="${a.thumb}" alt="${a.title}" class="lazy-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="min-height:120px;" />
+      <div class="item-overlay">
+        <div class="flex items-center justify-between w-full">
+          <button onclick="event.stopPropagation();openDownload(${a.id})" class="bg-white text-gray-900 text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-brand-50 transition-colors">⬇ Free</button>
+          <span class="${fc} text-white text-xs font-bold px-2 py-0.5 rounded">${a.format}</span>
+        </div>
+      </div>
+      <div class="item-meta">
+        <p class="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">${a.title}</p>
+        <div class="flex items-center justify-between mt-0.5">
+          <p class="text-xs text-gray-400">${fmtNum(a.downloads)} dl</p>
+          <p class="text-xs text-red-400">❤ ${fmtNum(a.likes)}</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ---- TRENDING SEARCH TAGS ----
+function buildTrendingSearchTags() {
+  const el = document.getElementById('trendingSearchTags');
+  if (!el) return;
+  el.innerHTML = TRENDING_SEARCHES.slice(0,8).map(s => `
+    <button onclick="searchByKeyword('${s}')" class="bg-white dark:bg-gray-800 hover:bg-brand-50 dark:hover:bg-brand-900/30 text-gray-700 dark:text-gray-300 hover:text-brand-700 dark:hover:text-brand-300 text-xs px-3 py-1.5 rounded-full transition-colors border border-gray-200 dark:border-gray-700">
+      ${s}
+    </button>
+  `).join('');
+}
+
+// ---- LEADERBOARD ----
+function buildLeaderboard() {
+  const el = document.getElementById('leaderboardList');
+  if (!el) return;
+  const top = getTrendingAssets(activeTimePeriod).slice(0,5);
+  const medalColors = ['linear-gradient(135deg,#fbbf24,#f59e0b)','linear-gradient(135deg,#cbd5e1,#94a3b8)','linear-gradient(135deg,#fb923c,#ea580c)','#374151','#374151'];
+  el.innerHTML = top.map((a,i) => `
+    <div class="lb-row" onclick="openPreview(${a.id})">
+      <div class="lb-rank" style="background:${medalColors[i]}">${i+1}</div>
+      <img src="${a.thumb}" alt="" class="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">${a.title}</p>
+        <p class="text-xs text-gray-400">${fmtNum(a.downloads)} downloads</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ---- TRENDING CATEGORIES STRIP ----
+function buildTrendingCategories() {
+  const grid = document.getElementById('trendingCatsGrid');
+  if (!grid) return;
+  // Rank categories by total downloads of their trending assets
+  const catScores = {};
+  ASSETS.filter(a => a.tags.includes('trending')).forEach(a => {
+    catScores[a.category] = (catScores[a.category]||0) + a.downloads;
+  });
+  const ranked = Object.keys(catScores)
+    .map(id => ({ cat: CATEGORIES.find(c=>c.id===id), score: catScores[id] }))
+    .filter(x => x.cat)
+    .sort((a,b) => b.score - a.score)
+    .slice(0,5);
+
+  grid.innerHTML = ranked.map((item,i) => `
+    <a href="categories.html?cat=${item.cat.id}" class="relative rounded-2xl overflow-hidden aspect-square bg-gradient-to-br ${item.cat.color} flex flex-col items-center justify-center text-center p-3 hover:scale-105 transition-transform">
+      <span class="absolute top-2 left-2 bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-full">#${i+1}</span>
+      <div class="text-3xl mb-2">${item.cat.emoji}</div>
+      <p class="text-white font-display font-bold text-sm">${item.cat.name}</p>
+      <p class="text-white/60 text-xs mt-0.5">${fmtNum(item.score)} downloads</p>
+    </a>
+  `).join('');
+}
+
+// ---- SEARCH ----
+function setupSearches() {
+  ['navSearch','mobileSearch'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') searchByKeyword(el.value); });
+  });
+}
+function searchByKeyword(q) {
+  q = (q||'').trim();
+  if (!q) return;
+  window.location.href = 'categories.html?search=' + encodeURIComponent(q);
+}
+
+// ---- PREVIEW MODAL ----
+function openPreview(id) {
+  const a = ASSETS.find(x => x.id === id);
+  if (!a) return;
+  currentPreviewAsset = a;
+  document.getElementById('pvImg').src = a.thumb;
+  document.getElementById('pvTitle').textContent = a.title;
+  document.getElementById('pvCat').textContent = a.category;
+  document.getElementById('pvDl').textContent = fmtNum(a.downloads) + ' downloads';
+  document.getElementById('pvLikes').textContent = '❤ ' + fmtNum(a.likes);
+  const fmtEl = document.getElementById('pvFmt');
+  fmtEl.textContent = a.format;
+  fmtEl.className = (FMT_COLORS[a.format] || 'bg-gray-500') + ' px-2 py-1 rounded-lg text-xs font-bold text-white';
+  document.getElementById('previewModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  lucide.createIcons();
+}
+function closePreview() {
+  document.getElementById('previewModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+function downloadFromPreview() {
+  if (!currentPreviewAsset) return;
+  closePreview();
+  openDownload(currentPreviewAsset.id);
+}
+function likeCurrentAsset() {
+  if (!currentPreviewAsset) return;
+  const a = ASSETS.find(x => x.id === currentPreviewAsset.id);
+  if (a) a.likes++;
+  showToast('❤️ Added to liked assets!');
+}
+function shareCurrentAsset() {
+  const text = encodeURIComponent(`Download "${currentPreviewAsset?.title}" free on FreeAssetsHub! https://freeassetshub.com`);
+  window.open('https://wa.me/?text=' + text, '_blank');
+}
+
+// ---- DOWNLOAD MODAL ----
+function openDownload(id) {
+  const a = ASSETS.find(x => x.id === id);
+  if (!a) return;
+  pendingDownload = a;
+  const meta = document.getElementById('modalMeta');
+  meta.classList.remove('hidden');
+  document.getElementById('modalThumb').src = a.thumb;
+  document.getElementById('modalTitle').textContent = a.title;
+  document.getElementById('modalFormat').textContent = `${a.format} • ${a.size || ''}`;
+  document.getElementById('downloadModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  lucide.createIcons();
+  startCountdown();
+}
+function closeDownloadModal() {
+  document.getElementById('downloadModal').classList.add('hidden');
+  document.body.style.overflow = '';
+  clearInterval(dlTimer);
+  document.getElementById('countdownNum').textContent = '5';
+  document.getElementById('countdownBar').style.width = '0%';
+  const btn = document.getElementById('dlNowBtn');
+  btn.disabled = true; btn.classList.add('opacity-50','cursor-not-allowed');
+  btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download Now — Free!';
+}
+function startCountdown() {
+  let s = 5;
+  const numEl = document.getElementById('countdownNum');
+  const barEl = document.getElementById('countdownBar');
+  const btn = document.getElementById('dlNowBtn');
+  numEl.textContent = s; barEl.style.width = '0%';
+  btn.disabled = true; btn.classList.add('opacity-50','cursor-not-allowed');
+  clearInterval(dlTimer);
+  dlTimer = setInterval(() => {
+    s--;
+    numEl.textContent = s;
+    barEl.style.width = `${((5 - s) / 5) * 100}%`;
+    if (s <= 0) {
+      clearInterval(dlTimer);
+      btn.disabled = false;
+      btn.classList.remove('opacity-50','cursor-not-allowed');
+      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download Now — Free!';
+    }
+  }, 1000);
+}
+function startActualDownload() {
+  if (!pendingDownload) return;
+  const a = ASSETS.find(x => x.id === pendingDownload.id);
+  if (a) a.downloads++;
+  closeDownloadModal();
+
+  const url = pendingDownload.downloadUrl;
+  if (!url || url === '#' || url.trim() === '') {
+    showToast('⚠️ This is a sample asset — admin needs to add a real file URL.');
+    return;
+  }
+  const link = document.createElement('a');
+  link.href = url; link.setAttribute('download',''); link.target='_blank'; link.rel='noopener';
+  document.body.appendChild(link); link.click(); link.remove();
+  showToast('⬇️ Download started! Enjoy your free asset.');
+}
+
+// ---- SHARE ----
+function shareWhatsApp() {
+  const t = encodeURIComponent(`Check out "${pendingDownload?.title}" on FreeAssetsHub — Free Downloads! https://freeassetshub.com`);
+  window.open('https://wa.me/?text=' + t, '_blank');
+}
+function shareTelegram() {
+  const t = encodeURIComponent(`Free Download: "${pendingDownload?.title}" https://freeassetshub.com`);
+  window.open('https://t.me/share/url?url=' + encodeURIComponent('https://freeassetshub.com') + '&text=' + t, '_blank');
+}
+
+// ---- LAZY LOAD ----
+function initLazyLoad() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.classList.add('loaded'); });
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const img = e.target;
+        if (img.dataset.src) { img.src = img.dataset.src; img.addEventListener('load',()=>img.classList.add('loaded')); img.removeAttribute('data-src'); }
+        obs.unobserve(img);
+      }
+    });
+  }, { rootMargin: '150px' });
+  document.querySelectorAll('img[data-src]').forEach(img => obs.observe(img));
+}
+
+// ---- UTILS ----
+function fmtNum(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return n;
+}
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1f2937;color:white;padding:10px 20px;border-radius:50px;font-size:.875rem;z-index:100;animation:toastIn .3s ease';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+</script>
+<style>@keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}</style>
+</body>
+</html>
